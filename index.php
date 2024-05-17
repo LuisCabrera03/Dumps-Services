@@ -11,7 +11,10 @@
     include 'Components/header.php';
     ?>
     <!-- Aquí va el resto del contenido de tu página -->
-
+    <?php
+    // Incluir el footer.php desde la carpeta Components
+    include 'Components/home.php';
+    ?>
     <?php
     // Incluir el footer.php desde la carpeta Components
     include 'Components/footer.php';
