@@ -1,0 +1,174 @@
+/* Reset de CSS para asegurar consistencia entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif; /* Fuente principal */
+    line-height: 1.6; /* Altura de línea */
+    background-color: #f2f2f2; /* Color de fondo */
+    color: #333; /* Color del texto principal */
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.centered {
+    display: flex; /* Mostrar como flexbox para alinear contenido */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    flex-direction: column;
+}
+
+.column {
+    flex: 1; /* Ocupa todo el espacio disponible */
+    text-align: center; /* Alinear contenido al centro */
+}
+
+.imagen-logotipo {
+    max-width: 200px; /* Ancho máximo de la imagen */
+    margin-bottom: 20px; /* Espacio inferior entre la imagen y el texto */
+    margin-top: 20px; /* Espacio superior entre la imagen y el texto */
+    border-radius: 10px; /* Borde redondeado */
+    transition: transform 0.3s ease-in-out; /* Transición suave para la propiedad transform */
+    margin-left: 20px; /* Espacio a la izquierda */
+    margin-right: 20px; /* Espacio a la derecha */
+}
+
+.imagen-logotipo:hover {
+    transform: scale(1.1); /* Escalar la imagen al hacer hover */
+}
+
+.texto-descripcion {
+    text-align: justify; /* Alinear texto justificado */
+    font-size: 1.2rem; /* Tamaño de fuente */
+    line-height: 1.8; /* Altura de línea */
+    color: #333; /* Color del texto */
+    margin-top: 10px; /* Espacio superior entre el texto y la imagen */
+    margin-bottom: 10px; /* Espacio inferior entre el texto y la imagen */
+    max-width: 800px;
+    margin: 0 auto 20px; /* Centrar horizontalmente */
+}
+
+.texto-descripcion p {
+    margin-bottom: 20px; /* Espacio inferior entre párrafos */
+}
+
+.texto-descripcion strong {
+    font-weight: bold; /* Texto en negrita */
+}
+
+.texto-descripcion em {
+    font-style: italic; /* Texto en cursiva */
+}
+
+.texto-descripcion a {
+    color: #007bff; /* Color del enlace */
+    text-decoration: none; /* Sin subrayado */
+    border-bottom: 1px solid #007bff; /* Línea decorativa al pasar el ratón */
+    transition: border-color 0.3s; /* Transición suave del color de borde */
+}
+
+.texto-descripcion a:hover {
+    border-color: transparent; /* Ocultar la línea decorativa al pasar el ratón */
+}
+
+.texto-descripcion ul {
+    list-style-type: disc; /* Puntos como viñetas */
+    margin-left: 20px; /* Sangría izquierda */
+}
+
+.texto-descripcion ol {
+    list-style-type: decimal; /* Números como viñetas */
+    margin-left: 20px; /* Sangría izquierda */
+}
+
+.texto-descripcion li {
+    margin-bottom: 10px; /* Espacio entre elementos de lista */
+}
+
+.texto-descripcion img {
+    max-width: 100%; /* Imágenes responsivas */
+    height: auto; /* Altura automática */
+    display: block; /* Mostrar como bloque */
+    margin: 20px auto; /* Margen superior e inferior de 20px, centrado horizontalmente */
+}
+
+.texto-descripcion blockquote {
+    border-left: 5px solid #007bff; /* Borde izquierdo del bloque de cita */
+    padding-left: 10px; /* Relleno izquierdo */
+    margin-left: 20px; /* Margen izquierdo */
+    font-style: italic; /* Texto en cursiva */
+}
+
+.hero {
+    position: relative; /* Posición relativa */
+    width: 100%; /* Ancho completo */
+    height: 300px; /* Altura fija */
+    background-image: url('https://formicentro.com/wp-content/uploads/2021/11/formica-bogota-colombia-laminados-decorativos-formicentro-pacifico-fondo.jpg'); /* Imagen de fondo */
+    background-position: center; /* Posición del fondo centrada */
+    background-size: cover; /* Tamaño del fondo cubrir */
+    display: flex; /* Mostrar como flexbox */
+    justify-content: center; /* Centrar horizontalmente */
+    align-items: center; /* Centrar verticalmente */
+    color: #fff; /* Color del texto */
+    text-align: center; /* Alinear texto al centro */
+    padding: 20px; /* Espaciado interno */
+}
+
+.titulo {
+    font-size: 3em; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Sombra de texto */
+    margin-top: 20px; /* Espacio superior */
+    margin-bottom: 20px; /* Espacio inferior */
+}
+
+.img-container {
+    margin-top: 30px; /* Espacio superior */
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
+}
+
+.img-fluid:hover {
+    transform: scale(1.1);
+}
+
+/* Estilo responsive para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .centered {
+        flex-direction: column; /* Cambiar a disposición de columna */
+        align-items: center; /* Centrar elementos verticalmente */
+    }
+
+    .column {
+        flex: 100%; /* Ocupar todo el ancho en pantallas pequeñas */
+        max-width: 100%; /* Ancho máximo completo */
+        text-align: left; /* Alinear texto a la izquierda */
+    }
+
+    .hero {
+        height: 200px; /* Reducir altura del héroe */
+    }
+
+    .titulo {
+        font-size: 2em; /* Tamaño de fuente reducido */
+    }
+
+    .texto-descripcion {
+        font-size: 1.1rem; /* Reducir tamaño de fuente en pantallas pequeñas */
+        line-height: 1.6; /* Reducir altura de línea en pantallas pequeñas */
+    }
+}

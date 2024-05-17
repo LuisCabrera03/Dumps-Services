@@ -3,22 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css\main.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> <!-- Enlace a Font Awesome -->
     <title>Dump Services</title>
 </head>
 <body>
-    <?php
-    // Incluir el header.php desde la carpeta Components
-    include 'Components/header.php';
-    ?>
-    <!-- Aquí va el resto del contenido de tu página -->
-    <?php
-    // Incluir el footer.php desde la carpeta Components
-    include 'Components/home.php';
-    ?>
-    <?php
-    // Incluir el footer.php desde la carpeta Components
-    include 'Components/footer.php';
-    ?>
-
+    <?php include 'Components/header.php'; ?>
+    <?php include 'Components/home.php'; ?>
+    <?php include 'Components/footer.php';?>
 </body>
 </html>
