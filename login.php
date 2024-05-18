@@ -23,6 +23,7 @@ if (isset($_SESSION['usuario_id'])) {
             $mensaje = "Rol de usuario no válido.";
     }
 }
+
 // Verificar si se ha enviado el formulario de inicio de sesión
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verificar si se han enviado los datos de usuario y contraseña
@@ -81,10 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Iniciar Sesión - Dump Services</title>
 </head>
 <body>
-    <?php
-    // Incluir el encabezado
-    include 'header.php';
-    ?>
+
     
     <h2>Iniciar Sesión</h2>
     
@@ -100,7 +98,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="email" id="usuario" name="usuario" required><br><br>
         <label for="contrasena">Contraseña:</label>
         <input type="password" id="contrasena" name="contrasena" required><br><br>
-        <button type="submit">Ingresar</button>
+        <button type="submit">Ingresar</button>        
+        <a href="createAcount.php">Crea tu cuenta</a>
     </form>
     
     <?php

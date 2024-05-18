@@ -60,10 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Crear Cuenta - Dump Services</title>
 </head>
 <body>
-    <?php
-    // Incluir el encabezado
-    include 'header.php';
-    ?>
+
     
     <h2>Crear Cuenta</h2>
 

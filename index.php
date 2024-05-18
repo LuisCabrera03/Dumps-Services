@@ -8,8 +8,8 @@
     <title>Dump Services</title>
 </head>
 <body>
-    <?php include 'Components/header.php'; ?>
-    <?php include 'Components/home.php'; ?>
-    <?php include 'Components/footer.php';?>
+    <?php include 'header.php'; ?>
+    <?php include 'home.php'; ?>
+    <?php include 'footer.php';?>
 </body>
 </html>

@@ -70,6 +70,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Formulario de Registro de Operario</title>
 </head>
 <body>
+<?php
+    // Incluir el encabezado
+    include 'header.php';
+    ?>
     <h2>Registro de Operario</h2>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
         <!-- Input oculto para el id_usuario -->
