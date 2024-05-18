@@ -1,36 +1,75 @@
-/* Reset de CSS para asegurar consistencia entre navegadores */
+/* Estilos generales */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Estilos generales */
 body {
-    font-family: Arial, sans-serif; /* Fuente principal */
-    line-height: 1.6; /* Altura de línea */
-    background-color: #f2f2f2; /* Color de fondo */
-    color: #333; /* Color del texto principal */
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f2f2f2;
+    color: #333;
 }
 
 .container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
 }
 
 .centered {
-    display: flex; /* Mostrar como flexbox para alinear contenido */
-    justify-content: center; /* Centrar horizontalmente */
-    align-items: center; /* Centrar verticalmente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
 }
 
-.column {
-    flex: 1; /* Ocupa todo el espacio disponible */
-    text-align: center; /* Alinear contenido al centro */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
+.col-md-6 {
+    flex: 0 0 48%; /* Ajustar según el espacio que desees entre texto y video */
+    margin-bottom: 20px;
+}
+
+.texto-descripcion {
+    text-align: justify;
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.texto-descripcion p {
+    margin-bottom: 10px;
+}
+
+.video-container {
+    position: relative;
+    overflow: hidden;
+    padding-top: 56.25%; /* Proporción 16:9 para el contenedor del video */
+    margin-top: 10px;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .col-md-6 {
+        flex: 0 0 100%;
+    }
+}
+
+/* Estilos adicionales que se encuentran en tu CSS anterior */
 .imagen-logotipo {
     max-width: 200px; /* Ancho máximo de la imagen */
     margin-bottom: 20px; /* Espacio inferior entre la imagen y el texto */
@@ -64,21 +103,6 @@ body {
     font-weight: bold; /* Texto en negrita */
 }
 
-.texto-descripcion em {
-    font-style: italic; /* Texto en cursiva */
-}
-
-.texto-descripcion a {
-    color: #007bff; /* Color del enlace */
-    text-decoration: none; /* Sin subrayado */
-    border-bottom: 1px solid #007bff; /* Línea decorativa al pasar el ratón */
-    transition: border-color 0.3s; /* Transición suave del color de borde */
-}
-
-.texto-descripcion a:hover {
-    border-color: transparent; /* Ocultar la línea decorativa al pasar el ratón */
-}
-
 .texto-descripcion ul {
     list-style-type: disc; /* Puntos como viñetas */
     margin-left: 20px; /* Sangría izquierda */
@@ -98,13 +122,12 @@ body {
     height: auto; /* Altura automática */
     display: block; /* Mostrar como bloque */
     margin: 20px auto; /* Margen superior e inferior de 20px, centrado horizontalmente */
+    border-radius: 10px;
+    transition: transform 0.3s ease-in-out;
 }
 
-.texto-descripcion blockquote {
-    border-left: 5px solid #007bff; /* Borde izquierdo del bloque de cita */
-    padding-left: 10px; /* Relleno izquierdo */
-    margin-left: 20px; /* Margen izquierdo */
-    font-style: italic; /* Texto en cursiva */
+.texto-descripcion img:hover {
+    transform: scale(1.1);
 }
 
 .hero {
@@ -131,44 +154,119 @@ body {
 }
 
 .img-container {
+    display: flex; /* Usar flexbox para alinear horizontalmente */
+    justify-content: space-between; /* Espacio entre imágenes */
     margin-top: 30px; /* Espacio superior */
+    flex-wrap: wrap; /* Permitir que las imágenes se envuelvan */
 }
 
-.img-fluid {
-    max-width: 100%;
-    height: auto;
-    display: block;
+.custom-img {
+    max-width: 100%; /* Ancho máximo del contenedor */
+    height: auto; /* Altura automática */
+    border-radius: 10px; /* Bordes redondeados */
+    transition: transform 0.3s ease-in-out; /* Transición suave para hover */
+    width: 350px; /* Ancho fijo en píxeles */
+    height: 250px; /* Altura fija en píxeles */
+}
+
+.custom-img:hover {
+    transform: scale(1.1); /* Efecto de zoom en hover */
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
+}
+
+.mt-5 {
+    margin-top: 3rem;
+}
+
+/* Estilos específicos para testimonios */
+.img-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.testimonial-item {
+    position: relative;
+    overflow: hidden;
+    width: calc(33.33% - 20px);
+    margin-bottom: 20px;
     border-radius: 10px;
-    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.8s ease;
 }
 
-.img-fluid:hover {
-    transform: scale(1.1);
+.testimonial-item:hover {
+    transform: translateY(-5px);
 }
 
-/* Estilo responsive para pantallas más pequeñas */
+.testimonial-img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.testimonial-item:hover .testimonial-img {
+    transform: rotateY(180deg);
+}
+
+.testimonial-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+}
+
+.testimonial-item:hover .testimonial-text {
+    opacity: 1;
+}
+
+/* Ajustes responsivos */
 @media (max-width: 768px) {
-    .centered {
-        flex-direction: column; /* Cambiar a disposición de columna */
-        align-items: center; /* Centrar elementos verticalmente */
-    }
-
-    .column {
-        flex: 100%; /* Ocupar todo el ancho en pantallas pequeñas */
-        max-width: 100%; /* Ancho máximo completo */
-        text-align: left; /* Alinear texto a la izquierda */
-    }
-
-    .hero {
-        height: 200px; /* Reducir altura del héroe */
-    }
-
-    .titulo {
-        font-size: 2em; /* Tamaño de fuente reducido */
+    .imagen-logotipo {
+        max-width: 150px;
+        margin-bottom: 10px;
+        margin-top: 10px;
     }
 
     .texto-descripcion {
-        font-size: 1.1rem; /* Reducir tamaño de fuente en pantallas pequeñas */
-        line-height: 1.6; /* Reducir altura de línea en pantallas pequeñas */
+        font-size: 1rem;
+        line-height: 1.5;
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .custom-img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin-bottom: 20px;
+    }
+
+    .img-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .testimonial-item {
+        width: calc(50% - 20px);
     }
 }
