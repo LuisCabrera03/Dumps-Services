@@ -25,6 +25,46 @@ if (isset($_POST['entregado'])) {
     }
 }
 
+// Función para guardar la calificación
+if (isset($_POST['submit_calificacion'])) {
+    $id_solicitud = $_POST['id_solicitud'];
+    $calificacion = $_POST['calificacion'];
+
+    // Obtener el ID del operario asociado a la solicitud
+    $sql_id_operario = "SELECT id_operario FROM solicitudes WHERE id = $id_solicitud";
+    $resultado_id_operario = mysqli_query($conn, $sql_id_operario);
+    $row = mysqli_fetch_assoc($resultado_id_operario);
+    $id_operario = $row['id_operario'];
+
+    // Obtener las calificaciones previas del operario
+    $sql_calificaciones_previas = "SELECT calificacion FROM operarios WHERE id_operario = $id_operario";
+    $resultado_calificaciones_previas = mysqli_query($conn, $sql_calificaciones_previas);
+
+    $total_calificaciones = 0;
+    $total_usuarios = 0;
+
+    // Calcular el nuevo promedio
+    while ($fila_calificacion = mysqli_fetch_assoc($resultado_calificaciones_previas)) {
+        $total_calificaciones += $fila_calificacion['calificacion'];
+        $total_usuarios++;
+    }
+
+    // Sumar la nueva calificación
+    $total_calificaciones += $calificacion;
+    $total_usuarios++;
+
+    // Calcular el nuevo promedio
+    $nuevo_promedio = $total_calificaciones / $total_usuarios;
+
+    // Actualizar la calificación en la tabla de operarios
+    $sql_guardar_calificacion = "UPDATE operarios SET calificacion = $nuevo_promedio WHERE id_operario = $id_operario";
+    if (mysqli_query($conn, $sql_guardar_calificacion)) {
+        echo "¡Gracias por tu calificación!";
+    } else {
+        echo "Error al guardar la calificación: " . mysqli_error($conn);
+    }
+}
+
 // Consulta para obtener la información relevante de todas las solicitudes del solicitante actual
 $id_solicitante = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : (isset($_COOKIE['usuario_id']) ? $_COOKIE['usuario_id'] : null);
 
@@ -49,8 +89,28 @@ if ($id_solicitante) {
                 if ($solicitud['estado'] == 'Espera') {
                     echo "<input type='submit' name='cancelar' value='Cancelar'>";
                 } elseif ($solicitud['estado'] == 'Aceptado') {
-                    echo "<input type='submit' name='entregado' value='Marcar como entregado'>";
+                    echo "<input type='submit' name='entregado' value='Pedido Recibido'>";
                 }
+
+                // Aquí se mostrará el formulario de calificación si el estado es "Entregado"
+                if ($solicitud['estado'] == 'Entregado') {
+                    // Obtener la calificación actual del operario
+                    $id_operario = $solicitud['id_operario'];
+                    $sql_calificacion_operario = "SELECT calificacion FROM operarios WHERE id_operario = $id_operario";
+                    $resultado_calificacion_operario = mysqli_query($conn, $sql_calificacion_operario);
+                    $calificacion_operario = mysqli_fetch_assoc($resultado_calificacion_operario)['calificacion'];
+
+                    echo "<div>";
+                    echo "<label for='nueva_calificacion'>Calificación (1-5):</label>";
+                    echo "<input type='radio' name='nueva_calificacion' value='1' " . ($calificacion_operario == 1 ? "checked" : "") . ">1";
+                    echo "<input type='radio' name='nueva_calificacion' value='2' " . ($calificacion_operario == 2 ? "checked" : "") . ">2";
+                    echo "<input type='radio' name='nueva_calificacion' value='3' " . ($calificacion_operario == 3 ? "checked" : "") . ">3";
+                    echo "<input type='radio' name='nueva_calificacion' value='4' " . ($calificacion_operario == 4 ? "checked" : "") . ">4";
+                    echo "<input type='radio' name='nueva_calificacion' value='5' " . ($calificacion_operario == 5 ? "checked" : "") . ">5";
+                    echo "</div>";
+                    echo "<input type='submit' name='submit_nueva_calificacion' value='Cambiar Calificación'>";
+                }
+
                 echo "</form>";
                 echo "<a href='chat.php?id_solicitud=" . $solicitud['id'] . "&id_operario=" . $solicitud['id_operario'] . "'>Chatear con el operador</a>";
                 echo "</div><hr>";
