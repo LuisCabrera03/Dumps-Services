@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-05-2024 a las 17:45:34
+-- Tiempo de generación: 20-05-2024 a las 01:45:33
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `dump`
 --
-CREATE DATABASE IF NOT EXISTS `dump` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `dump`;
 
 -- --------------------------------------------------------
 
@@ -51,35 +49,16 @@ CREATE TABLE `operarios` (
   `certificado_seguridad_social` varchar(255) DEFAULT NULL,
   `licencia_conduccion` varchar(50) DEFAULT NULL,
   `seguro_vehiculo` varchar(255) DEFAULT NULL,
+  `calificacion` int(11) DEFAULT NULL,
   `otros_detalles` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Estructura de tabla para la tabla `usuarios`
+-- Volcado de datos para la tabla `operarios`
 --
 
-CREATE TABLE `usuarios` (
-  `id` int(11) NOT NULL,
-  `nombre` varchar(50) NOT NULL,
-  `apellidos` varchar(50) NOT NULL,
-  `fecha_nacimiento` date NOT NULL,
-  `tipo_documento` enum('cc','ce') NOT NULL,
-  `numero_documento` varchar(20) NOT NULL,
-  `correo` varchar(100) NOT NULL,
-  `rol` enum('administrador','operador_logistico','solicitante_transporte') NOT NULL,
-  `contrasena` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuarios`
---
-
-INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `fecha_nacimiento`, `tipo_documento`, `numero_documento`, `correo`, `rol`, `contrasena`) VALUES
-(2, 'luis', 'Cabrera', '2024-04-29', 'cc', '10258748', 'cabrerasarrialu3is@gmail.com', 'solicitante_transporte', '123456789'),
-(3, 'luis', 'Cabrera', '2024-04-29', 'cc', '10258748', 'cabrerasarrialuis@gmail.com', 'operador_logistico', '123456789'),
-(4, 'admin', 'admin', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789');
+INSERT INTO `operarios` (`id_operario`, `id_usuario`, `marca_motocarro`, `modelo_motocarro`, `año_motocarro`, `placa_motocarro`, `foto_motocarro`, `foto_2`, `foto_3`, `foto_4`, `foto_5`, `foto_6`, `foto_7`, `foto_8`, `foto_9`, `foto_10`, `direccion_domicilio`, `certificado_antecedentes_judiciales`, `certificado_seguridad_social`, `licencia_conduccion`, `seguro_vehiculo`, `calificacion`, `otros_detalles`) VALUES
+(1, 3, 'pepe', '2011', 2011, 'eag09c', 'media/fotos/descargar (2).jpg', 'media/fotos/descargar (6).jpg', 'media/fotos/descargar (4).jpg', 'media/fotos/descargar (3).jpg', 'media/fotos/descargar (1).jpg', 'media/fotos/descargar (5).jpg', 'media/fotos/descargar.jpg', 'media/fotos/descargar (2).jpg', 'media/fotos/descargar (5).jpg', 'media/fotos/descargar (5).jpg', 'calle 2', 'media/certificados/antecedentes/RO42hZ9.png', 'media/certificados/seguridad/descargar (4).jpg', 'media/certificados/licencia/descargar (3).jpg', 'media/certificados/seguro/descargar (5).jpg', 3, 'SDFGHGFD');
 
 --
 -- Índices para tablas volcadas
@@ -93,12 +72,6 @@ ALTER TABLE `operarios`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indices de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
-
---
 -- AUTO_INCREMENT de las tablas volcadas
 --
 
@@ -106,13 +79,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `operarios`
 --
 ALTER TABLE `operarios`
-  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `usuarios`
---
-ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
