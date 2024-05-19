@@ -1,6 +1,30 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
+include 'header.php';
+
+// Consulta para obtener el número de solicitudes del solicitante actual
+$id_solicitante = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : (isset($_COOKIE['usuario_id']) ? $_COOKIE['usuario_id'] : null);
+$num_solicitudes = 0;
+
+if ($id_solicitante) {
+    $sql_num_solicitudes = "SELECT COUNT(*) AS num_solicitudes FROM solicitudes WHERE id_solicitante = $id_solicitante";
+    $resultado_num_solicitudes = mysqli_query($conn, $sql_num_solicitudes);
+
+    if ($resultado_num_solicitudes) {
+        $row = mysqli_fetch_assoc($resultado_num_solicitudes);
+        $num_solicitudes = $row['num_solicitudes'];
+    } else {
+        // Error al ejecutar la consulta
+        echo "Error al obtener el número de solicitudes: " . mysqli_error($conn);
+    }
+} else {
+    // ID de solicitante de transporte no disponible
+    echo "Error: ID de solicitante de transporte no disponible.";
+}
+
+// Botón para ver solicitudes
+echo "<a href='solicitud.php' class='solicitud-button'>Ver Mis Solicitudes</a>";
 
 // Consulta para obtener la información relevante de todos los operarios
 $sql_operarios = "SELECT 
@@ -84,9 +108,18 @@ mysqli_close($conn);
                 width: calc(100% - 40px);
             }
         }
+        .solicitud-button {
+            margin-top: 20px;
+            display: block;
+        }
     </style>
 </head>
 <body>
 
 </body>
 </html>
+</html>
+<?php
+    include 'footer.php';
+?>
+
