@@ -1,6 +1,7 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
+include 'header.php';
 
 // Obtener el ID de usuario de la cookie
 $id_usuario = $_COOKIE['usuario_id'];
@@ -64,6 +65,7 @@ if ($resultado_verificar_perfil) {
             <title>Perfil de Operario</title>
         </head>
         <body>
+
             <h2>Completa tu Perfil de Operario</h2>
             <form action="guardar_perfil_operario.php" method="post">
                 <label for="marca_motocarro">Marca del Motocarro:</label>
@@ -93,4 +95,6 @@ HTML;
 
 // Cerrar la conexión a la base de datos
 mysqli_close($conn);
+include 'footer.php'; 
+
 ?>
