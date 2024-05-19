@@ -81,7 +81,7 @@ $result7 = $conn->query($sql7);
 </head>
 <body>
     <h2>Panel de Control</h2>
-
+<a href="admin_usuarios.php">Gestion de usuarios</a>
     <div style="text-align: center;">
         <h3>Número de mensajes por usuario:</h3>
         <canvas id="mensajesChart"></canvas>
