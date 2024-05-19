@@ -15,6 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $fecha_nacimiento = $_POST['fecha_nacimiento'];
         $tipo_documento = $_POST['tipo_documento'];
         $numero_documento = $_POST['numero_documento'];
+        $telefono = $_POST['telefono'];
+
         $correo = $_POST['correo'];
         $rol = $_POST['rol'];
         $contrasena = $_POST['contrasena'];
@@ -33,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $mensaje = "Ya existe una cuenta asociada a este correo electrónico.";
             } else {
                 // El usuario no existe, proceder con la creación de la cuenta
-                $sql_insertar_usuario = "INSERT INTO usuarios (nombre, apellidos, fecha_nacimiento, tipo_documento, numero_documento, correo, rol, contrasena) VALUES ('$nombre', '$apellidos', '$fecha_nacimiento', '$tipo_documento', '$numero_documento', '$correo', '$rol', '$contrasena')";
+                $sql_insertar_usuario = "INSERT INTO usuarios (nombre, apellidos, fecha_nacimiento, tipo_documento, numero_documento, correo, rol, contrasena, telefono) VALUES ('$nombre', '$apellidos', '$fecha_nacimiento', '$tipo_documento', '$numero_documento', '$correo', '$rol', '$contrasena', '$telefono')";
 
                 if ($conn->query($sql_insertar_usuario) === TRUE) {
                     // La cuenta se creó correctamente, redirigir a login.php
@@ -78,6 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" id="apellidos" name="apellidos" required><br><br>
         <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
         <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required><br><br>
+        <label for="telefono">Teléfono:</label>
+<input type="text" id="telefono" name="telefono" required><br><br>
+
         <label for="tipo_documento">Tipo de Documento:</label>
         <select id="tipo_documento" name="tipo_documento" required>
             <option value="CC">Cédula de Ciudadanía</option>
