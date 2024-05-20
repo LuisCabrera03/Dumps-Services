@@ -4,25 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dump Services</title>
-</head>
-<body>
-    <header>
-        <h1>Dump Services</h1>
-        <?php
-        // Verificar si la sesión no está iniciada antes de llamar a session_start()
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #032b53;
+            --secondary-color: #064575;
+            --background-color: #f2f2f2;
+            --header-background: #021027;
+            --header-shadow: rgba(0, 0, 0, 0.1);
+            --header-border: #032b53;
+            --text-color: #333;
+            --button-border-radius: 50px;
+            --transition-speed: 0.3s;
         }
 
-        // Verificar si el usuario ya inició sesión
-        if (isset($_SESSION['usuario_id'])) {
-            // Mostrar el botón de cerrar sesión
-            echo '<button onclick="window.location.href = \'logout.php\';">Cerrar Sesión</button>';
-        } else {
-            // Mostrar el botón de ingresar
-            echo '<button onclick="window.location.href = \'login.php\';">Ingresar</button>';
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        ?>
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* Estilos del encabezado */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--header-background);
+            color: #fff;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--header-shadow);
+            border-bottom: 4px solid var(--header-border);
+        }
+
+        .main-header .logo h1 {
+            font-size: 2rem;
+            color: #fff;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            transition: color var(--transition-speed) ease;
+        }
+
+        .main-header .logo h1:hover {
+            color: #ddd;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-buttons button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: var(--button-border-radius);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+        }
+
+        .auth-buttons button i {
+            font-size: 1.2rem;
+        }
+
+        .auth-buttons button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .auth-buttons button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(3, 43, 83, 0.5);
+        }
+
+        /* Ajustes responsivos */
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .auth-buttons {
+                justify-content: center;
+                margin-top: 10px;
+            }
+
+            .auth-buttons button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <div class="logo">
+            <h1>Dump Services</h1>
+        </div>
+        <div class="auth-buttons">
+            <?php
+            // Verificar si la sesión no está iniciada antes de llamar a session_start()
+            if (session_status() == PHP_SESSION_NONE) {
+                session_start();
+            }
+
+            // Verificar si el usuario ya inició sesión
+            if (isset($_SESSION['usuario_id'])) {
+                // Mostrar el botón de cerrar sesión
+                echo '<button onclick="window.location.href = \'logout.php\';"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>';
+            } else {
+                // Mostrar el botón de ingresar
+                echo '<button onclick="window.location.href = \'login.php\';"><i class="fas fa-sign-in-alt"></i> Ingresar</button>';
+            }
+            ?>
+        </div>
     </header>
 </body>
 </html>

@@ -73,38 +73,144 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - Dump Services</title>
+    <title>Dump Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #032b53;
+            --secondary-color: #064575;
+            --background-color: #f2f2f2;
+            --footer-background: #021027;
+            --footer-text-color: #f2f2f2;
+            --footer-link-hover-color: #ddd;
+            --transition-speed: 0.3s;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .content-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-form-container {
+            width: 50%;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: var(--input-background);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-label {
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        .login-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: var(--secondary-color);
+        }
+
+        .login-link {
+            display: block;
+            margin-top: 20px;
+            color: var(--link-color);
+            text-decoration: none;
+            text-align: center;
+            transition: color 0.3s ease;
+        }
+
+        .login-link:hover {
+            color: var(--primary-color);
+        }
+
+        .side-image {
+            width: 50%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+    </style>
 </head>
 <body>
-
-    
-    <h2>Iniciar Sesión</h2>
-    
-    <?php
-    // Mostrar mensaje de error si existe alguno
-    if (isset($mensaje)) {
-        echo "<p>$mensaje</p>";
-    }
-    ?>
-
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <label for="usuario">Usuario (Correo Electrónico):</label>
-        <input type="email" id="usuario" name="usuario" required><br><br>
-        <label for="contrasena">Contraseña:</label>
-        <input type="password" id="contrasena" name="contrasena" required><br><br>
-        <button type="submit">Ingresar</button>        
-        <a href="createAcount.php">Crea tu cuenta</a>
-    </form>
-    
-    <?php
-    // Incluir el pie de página
-    include 'footer.php';
-    ?>
+    <div class="main-content">
+        <div class="content-container">
+            <div class="login-form-container">
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="login-form">
+                    <label for="usuario" class="login-label">Usuario (Correo Electrónico):</label>
+                    <input type="email" id="usuario" name="usuario" required class="login-input">
+                    
+                    <label for="contrasena" class="login-label">Contraseña:</label>
+                    <input type="password" id="contrasena" name="contrasena" required class="login-input">
+                    
+                    <button type="submit" class="login-button">Ingresar</button>        
+                    <a href="createAcount.php" class="login-link">Crea tu cuenta</a>
+                </form>
+            </div>
+            <img src="fonts\imagenes\logo.png" alt="Descripción de la imagen" class="side-image">
+        </div>
+    </div>
 </body>
 </html>
