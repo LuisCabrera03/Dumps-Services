@@ -106,52 +106,252 @@ if (mysqli_query($conn, $sql)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro de Operario</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #00132B;
+            --secondary-color: #3B4149;
+            --background-color: #f2f2f2;
+            --text-color: #333;
+            --input-background: #fff;
+            --link-color: #064575;
+            --font-family: 'Roboto', sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        /* Estilos generales */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background: var(--input-background);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            animation: slideIn var(--transition-speed) ease-out;
+            border-left: 5px solid var(--primary-color);
+            border-right: 5px solid var(--secondary-color);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        h2:after {
+            content: "";
+            width: 50px;
+            height: 3px;
+            background: var(--secondary-color);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 10px rgba(59, 65, 73, 0.2);
+            background: #fff;
+        }
+
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+
+        .form-group button,
+        .form-group input[type="submit"] {
+            padding: 10px;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .form-group button:hover,
+        .form-group input[type="submit"]:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group button:active,
+        .form-group input[type="submit"]:active {
+            transform: translateY(-1px);
+        }
+
+        /* Animaciones */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Estilos para filas */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .row .form-group {
+            flex: 1 1 calc(20% - 10px);
+        }
+
+        .row.full-width .form-group {
+            flex: 1 1 100%;
+        }
+    </style>
 </head>
 <body>
-    <h2>Registro de Operario</h2>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
-        <!-- Input oculto para el id_usuario -->
-        <input type="hidden" name="id_usuario" value="<?php echo $_COOKIE['usuario_id']; ?>">
+    <div class="container">
+        <h2>Registro de Operario</h2>
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+            <!-- Input oculto para el id_usuario -->
+            <input type="hidden" name="id_usuario" value="<?php echo $_COOKIE['usuario_id']; ?>">
 
-        <label for="marca">Marca del Motocarro:</label>
-        <input type="text" id="marca" name="marca" required><br><br>
+            <!-- Fila 1 -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="marca">Marca del Motocarro:</label>
+                    <input type="text" id="marca" name="marca" required>
+                </div>
+                <div class="form-group">
+                    <label for="modelo">Modelo del Motocarro:</label>
+                    <input type="text" id="modelo" name="modelo" required>
+                </div>
+                <div class="form-group">
+                    <label for="año">Año de Fabricación:</label>
+                    <input type="number" id="año" name="año" required>
+                </div>
+                <div class="form-group">
+                    <label for="placa">Placa del Motocarro:</label>
+                    <input type="text" id="placa" name="placa" required>
+                </div>
+                <div class="form-group">
+                    <label for="foto">Foto del Motocarro:</label>
+                    <input type="file" id="foto" name="foto" accept="image/*" required>
+                </div>
+            </div>
 
-        <label for="modelo">Modelo del Motocarro:</label>
-        <input type="text" id="modelo" name="modelo" required><br><br>
+            <!-- Fila 2 -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="direccion">Dirección del Domicilio:</label>
+                    <input type="text" id="direccion" name="direccion" required>
+                </div>
+                <?php for ($i = 1; $i <= 4; $i++) : ?>
+                    <div class="form-group">
+                        <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
+                        <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                    </div>
+                <?php endfor; ?>
+            </div>
 
-        <label for="año">Año de Fabricación:</label>
-        <input type="number" id="año" name="año" required><br><br>
+            <!-- Fila 3 -->
+            <div class="row">
+                <div class="form-group">
+                    <label for="certificado_antecedentes">Certificado de Antecedentes Judiciales:</label>
+                    <input type="file" id="certificado_antecedentes" name="certificado_antecedentes" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="certificado_seguridad">Certificado de Seguridad Social:</label>
+                    <input type="file" id="certificado_seguridad" name="certificado_seguridad" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="licencia_conduccion">Licencia de Conducción:</label>
+                    <input type="file" id="licencia_conduccion" name="licencia_conduccion" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="seguro_vehiculo">Seguro del Vehículo:</label>
+                    <input type="file" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="detalles">Otros Detalles:</label>
+                    <textarea id="detalles" name="detalles"></textarea>
+                </div>
+            </div>
 
-        <label for="placa">Placa del Motocarro:</label>
-        <input type="text" id="placa" name="placa" required><br><br>
+            <!-- Fila 4 -->
+            <div class="row">
+                <?php for ($i = 5; $i <= 8; $i++) : ?>
+                    <div class="form-group">
+                        <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
+                        <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                    </div>
+                <?php endfor; ?>
+            </div>
 
-        <label for="foto">Foto del Motocarro:</label>
-        <input type="file" id="foto" name="foto" accept="image/*" required><br><br>
-
-        <label for="direccion">Dirección del Domicilio:</label>
-        <input type="text" id="direccion" name="direccion" required><br><br>
-
-        <?php for ($i = 1; $i <= 10; $i++) : ?>
-            <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
-            <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*"><br><br>
-        <?php endfor; ?>
-
-        <label for="certificado_antecedentes">Certificado de Antecedentes Judiciales:</label>
-        <input type="file" id="certificado_antecedentes" name="certificado_antecedentes" accept="image/*"><br><br>
-
-        <label for="certificado_seguridad">Certificado de Seguridad Social:</label>
-        <input type="file" id="certificado_seguridad" name="certificado_seguridad" accept="image/*"><br><br>
-
-        <label for="licencia_conduccion">Licencia de Conducción:</label>
-        <input type="file" id="licencia_conduccion" name="licencia_conduccion" accept="image/*"><br><br>
-
-        <label for="seguro_vehiculo">Seguro del Vehículo:</label>
-        <input type="file" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*"><br><br>
-
-        <label for="detalles">Otros Detalles:</label>
-        <textarea id="detalles" name="detalles"></textarea><br><br>
-
-        <input type="submit" value="Registrar Operario">
-    </form>
+            <!-- Fila 5 -->
+            <div class="row full-width">
+                <div class="form-group">
+                    <input type="submit" value="Registrar Operario">
+                </div>
+            </div>
+        </form>
+    </div>
 </body>
 </html>

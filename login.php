@@ -89,11 +89,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             --primary-color: #032b53;
             --secondary-color: #064575;
             --background-color: #f2f2f2;
-            --footer-background: #021027;
-            --footer-text-color: #f2f2f2;
-            --footer-link-hover-color: #ddd;
-            --transition-speed: 0.3s;
+            --text-color: #333;
+            --input-background: #fff;
+            --link-color: #064575;
             --font-family: 'Roboto', sans-serif;
+            --transition-speed: 0.3s;
         }
 
         /* Estilos generales */
@@ -107,25 +107,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
-            line-height: 1.6;
             display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        .main-content {
-            flex: 1;
-        }
-
-        .content-container {
+        .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .login-form-container {
-            width: 50%;
+            width: 45%;
+            animation: fadeInLeft var(--transition-speed) ease-out;
         }
 
         .login-form {
@@ -136,6 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: slideIn var(--transition-speed) ease-out;
         }
 
         .login-label {
@@ -155,6 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .login-input:focus {
             border-color: var(--primary-color);
             outline: none;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .login-button {
@@ -166,11 +168,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
         .login-button:hover {
             background: var(--secondary-color);
+            transform: scale(1.05);
         }
 
         .login-link {
@@ -179,38 +182,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             color: var(--link-color);
             text-decoration: none;
             text-align: center;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.3s ease;
         }
 
         .login-link:hover {
             color: var(--primary-color);
+            transform: scale(1.05);
         }
 
         .side-image {
-            width: 50%;
+            width: 45%;
             height: auto;
             border-radius: 10px;
+            animation: fadeInRight var(--transition-speed) ease-out;
         }
 
+        /* Animaciones */
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <div class="content-container">
-            <div class="login-form-container">
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="login-form">
-                    <label for="usuario" class="login-label">Usuario (Correo Electrónico):</label>
-                    <input type="email" id="usuario" name="usuario" required class="login-input">
-                    
-                    <label for="contrasena" class="login-label">Contraseña:</label>
-                    <input type="password" id="contrasena" name="contrasena" required class="login-input">
-                    
-                    <button type="submit" class="login-button">Ingresar</button>        
-                    <a href="createAcount.php" class="login-link">Crea tu cuenta</a>
-                </form>
-            </div>
-            <img src="fonts\imagenes\logo.png" alt="Descripción de la imagen" class="side-image">
+    <div class="container">
+        <div class="login-form-container">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" class="login-form">
+                <label for="usuario" class="login-label">Usuario (Correo Electrónico):</label>
+                <input type="email" id="usuario" name="usuario" required class="login-input">
+                
+                <label for="contrasena" class="login-label">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" required class="login-input">
+                
+                <button type="submit" class="login-button">Ingresar</button>        
+                <a href="createAcount.php" class="login-link">Crea tu cuenta</a>
+            </form>
         </div>
+        <img src="fonts/imagenes/logo.png" alt="Descripción de la imagen" class="side-image">
     </div>
 </body>
 </html>
