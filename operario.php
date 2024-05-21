@@ -61,24 +61,7 @@ if ($id_usuario) {
         } else {
             // El usuario no tiene un perfil de operario, mostrar el formulario para llenar el perfil
             include 'header.php';
-            echo <<<HTML
-            <h2>Completa tu Perfil de Operario</h2>
-            <form action="guardar_perfil_operario.php" method="post">
-                <label for="marca_motocarro">Marca del Motocarro:</label>
-                <input type="text" id="marca_motocarro" name="marca_motocarro" required><br><br>
-
-                <label for="modelo_motocarro">Modelo del Motocarro:</label>
-                <input type="text" id="modelo_motocarro" name="modelo_motocarro" required><br><br>
-
-                <label for="año_motocarro">Año del Motocarro:</label>
-                <input type="text" id="año_motocarro" name="año_motocarro" required><br><br>
-
-                <label for="placa_motocarro">Placa del Motocarro:</label>
-                <input type="text" id="placa_motocarro" name="placa_motocarro" required><br><br>
-
-                <button type="submit">Guardar Perfil</button>
-            </form>
-HTML;
+            include 'perfil_operario.php';
         }
     } else {
         // Error al ejecutar la consulta para verificar el perfil
