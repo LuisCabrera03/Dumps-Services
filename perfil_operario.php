@@ -99,7 +99,6 @@ if (mysqli_query($conn, $sql)) {
     mysqli_close($conn);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -132,12 +131,20 @@ if (mysqli_query($conn, $sql)) {
             font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header, footer {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
         }
 
         .container {
@@ -146,6 +153,10 @@ if (mysqli_query($conn, $sql)) {
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
             animation: slideIn var(--transition-speed) ease-out;
             border-left: 5px solid var(--primary-color);
             border-right: 5px solid var(--secondary-color);
@@ -156,7 +167,6 @@ if (mysqli_query($conn, $sql)) {
             margin-bottom: 20px;
             color: var(--primary-color);
             position: relative;
-            display: inline-block;
             padding-bottom: 10px;
         }
 
@@ -172,14 +182,11 @@ if (mysqli_query($conn, $sql)) {
         }
 
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: 100%;
         }
 
         .form-group {
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 20px;
             width: 100%;
         }
 
@@ -187,11 +194,13 @@ if (mysqli_query($conn, $sql)) {
             font-weight: bold;
             margin-bottom: 5px;
             color: var(--primary-color);
+            display: block;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
+            width: 100%;
             padding: 10px;
             border: 1px solid var(--primary-color);
             border-radius: 5px;
@@ -223,6 +232,7 @@ if (mysqli_query($conn, $sql)) {
             font-size: 1rem;
             font-weight: bold;
             transition: background 0.3s ease, transform 0.3s ease;
+            width: 100%;
         }
 
         .form-group button:hover,
@@ -235,6 +245,10 @@ if (mysqli_query($conn, $sql)) {
         .form-group button:active,
         .form-group input[type="submit"]:active {
             transform: translateY(-1px);
+        }
+
+        .form-group.full-width textarea {
+            height: 100px;
         }
 
         /* Animaciones */
@@ -251,19 +265,18 @@ if (mysqli_query($conn, $sql)) {
 
         /* Estilos para filas */
         .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
             width: 100%;
         }
 
         .row .form-group {
-            flex: 1 1 calc(20% - 10px);
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         .row.full-width .form-group {
-            flex: 1 1 100%;
+            width: 100%;
         }
+
     </style>
 </head>
 <body>
@@ -291,23 +304,23 @@ if (mysqli_query($conn, $sql)) {
                     <label for="placa">Placa del Motocarro:</label>
                     <input type="text" id="placa" name="placa" required>
                 </div>
-                <div class="form-group">
-                    <label for="foto">Foto del Motocarro:</label>
-                    <input type="file" id="foto" name="foto" accept="image/*" required>
-                </div>
             </div>
 
             <!-- Fila 2 -->
             <div class="row">
                 <div class="form-group">
+                    <label for="foto">Foto del Motocarro:</label>
+                    <input type="file" id="foto" name="foto" accept="image/*" required>
+                </div>
+                <div class="form-group">
                     <label for="direccion">Dirección del Domicilio:</label>
                     <input type="text" id="direccion" name="direccion" required>
                 </div>
-                <?php for ($i = 1; $i <= 4; $i++) : ?>
-                    <div class="form-group">
-                        <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
-                        <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
-                    </div>
+                <?php for ($i = 1; $i <= 2; $i++) : ?>
+                <div class="form-group">
+                    <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
+                    <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                </div>
                 <?php endfor; ?>
             </div>
 
@@ -329,25 +342,21 @@ if (mysqli_query($conn, $sql)) {
                     <label for="seguro_vehiculo">Seguro del Vehículo:</label>
                     <input type="file" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*">
                 </div>
-                <div class="form-group">
-                    <label for="detalles">Otros Detalles:</label>
-                    <textarea id="detalles" name="detalles"></textarea>
-                </div>
             </div>
 
             <!-- Fila 4 -->
             <div class="row">
-                <?php for ($i = 5; $i <= 8; $i++) : ?>
-                    <div class="form-group">
-                        <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
-                        <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
-                    </div>
-                <?php endfor; ?>
-            </div>
-
-            <!-- Fila 5 -->
-            <div class="row full-width">
+                <?php for ($i = 3; $i <= 6; $i++) : ?>
                 <div class="form-group">
+                    <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
+                    <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                </div>
+                <?php endfor; ?>
+                <div class="form-group full-width">
+                    <label for="detalles">Otros Detalles:</label>
+                    <textarea id="detalles" name="detalles"></textarea>
+                </div>
+                <div class="form-group full-width">
                     <input type="submit" value="Registrar Operario">
                 </div>
             </div>
