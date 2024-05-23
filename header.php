@@ -115,17 +115,33 @@
         </div>
         <div class="auth-buttons">
             <?php
-            // Verificar si la sesión no está iniciada antes de llamar a session_start()
             if (session_status() == PHP_SESSION_NONE) {
                 session_start();
             }
 
-            // Verificar si el usuario ya inició sesión
             if (isset($_SESSION['usuario_id'])) {
-                // Mostrar el botón de cerrar sesión
+                // Mostrar botón de cerrar sesión
                 echo '<button onclick="window.location.href = \'logout.php\';"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>';
+
+                // Mostrar botón de redirección según el rol
+                $rol = $_SESSION['rol'];
+                switch ($rol) {
+                    case 'solicitante_transporte':
+                        $rol_url = 'solicitante.php';
+                        break;
+                    case 'operador_logistico':
+                        $rol_url = 'operario.php';
+                        break;
+                    case 'administrador':
+                        $rol_url = 'admin.php';
+                        break;
+                    default:
+                        $rol_url = '#';
+                        break;
+                }
+                echo '<button onclick="window.location.href = \'' . $rol_url . '\';"><i class="fas fa-user"></i> Mi Cuenta</button>';
             } else {
-                // Mostrar el botón de ingresar
+                // Mostrar botón de ingresar
                 echo '<button onclick="window.location.href = \'login.php\';"><i class="fas fa-sign-in-alt"></i> Ingresar</button>';
             }
             ?>

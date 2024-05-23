@@ -1,5 +1,6 @@
 <?php
 include 'conexion.php';
+include 'header.php';
 
 // Consulta para obtener el número de mensajes por usuario
 $sql = "SELECT usuarios.nombre, COUNT(mensajes.id) AS num_mensajes 
@@ -80,6 +81,7 @@ $result7 = $conn->query($sql7);
     </style>
 </head>
 <body>
+
     <h2>Panel de Control</h2>
 <a href="admin_usuarios.php">Gestion de usuarios</a>
     <div style="text-align: center;">
@@ -177,7 +179,6 @@ $result7 = $conn->query($sql7);
             $data4[] = $row4['num_solicitudes'];
         }
 
-        // Datos para el gráfico de usuarios por rol
         // Datos para el gráfico de usuarios por rol
         $labels5 = [];
         $data5 = [];
