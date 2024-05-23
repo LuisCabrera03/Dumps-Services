@@ -26,9 +26,9 @@ if (isset($_POST['entregado'])) {
 }
 
 // Función para guardar la calificación
-if (isset($_POST['submit_calificacion'])) {
+if (isset($_POST['submit_nueva_calificacion'])) {
     $id_solicitud = $_POST['id_solicitud'];
-    $calificacion = $_POST['calificacion'];
+    $calificacion = $_POST['nueva_calificacion'];
 
     // Obtener el ID del operario asociado a la solicitud
     $sql_id_operario = "SELECT id_operario FROM solicitudes WHERE id = $id_solicitud";
@@ -36,32 +36,39 @@ if (isset($_POST['submit_calificacion'])) {
     $row = mysqli_fetch_assoc($resultado_id_operario);
     $id_operario = $row['id_operario'];
 
-    // Obtener las calificaciones previas del operario
-    $sql_calificaciones_previas = "SELECT calificacion FROM operarios WHERE id_operario = $id_operario";
-    $resultado_calificaciones_previas = mysqli_query($conn, $sql_calificaciones_previas);
+    // Comprobar si ya existe una calificación para esta solicitud y operario
+    $sql_check_calificacion = "SELECT * FROM calificaciones WHERE id_operario = $id_operario AND id_solicitud = $id_solicitud";
+    $resultado_check_calificacion = mysqli_query($conn, $sql_check_calificacion);
 
-    $total_calificaciones = 0;
-    $total_usuarios = 0;
-
-    // Calcular el nuevo promedio
-    while ($fila_calificacion = mysqli_fetch_assoc($resultado_calificaciones_previas)) {
-        $total_calificaciones += $fila_calificacion['calificacion'];
-        $total_usuarios++;
+    if (mysqli_num_rows($resultado_check_calificacion) > 0) {
+        // Actualizar la calificación existente
+        $sql_actualizar_calificacion = "UPDATE calificaciones SET calificacion = $calificacion WHERE id_operario = $id_operario AND id_solicitud = $id_solicitud";
+        if (mysqli_query($conn, $sql_actualizar_calificacion)) {
+            echo "Calificación actualizada correctamente.";
+        } else {
+            echo "Error al actualizar la calificación: " . mysqli_error($conn);
+        }
+    } else {
+        // Insertar una nueva calificación
+        $sql_insertar_calificacion = "INSERT INTO calificaciones (id_operario, id_solicitud, calificacion) VALUES ($id_operario, $id_solicitud, $calificacion)";
+        if (mysqli_query($conn, $sql_insertar_calificacion)) {
+            echo "¡Gracias por tu calificación!";
+        } else {
+            echo "Error al guardar la calificación: " . mysqli_error($conn);
+        }
     }
 
-    // Sumar la nueva calificación
-    $total_calificaciones += $calificacion;
-    $total_usuarios++;
+    // Obtener el nuevo promedio de calificaciones para el operario
+    $sql_calcular_promedio = "SELECT AVG(calificacion) as promedio_calificacion FROM calificaciones WHERE id_operario = $id_operario";
+    $resultado_promedio = mysqli_query($conn, $sql_calcular_promedio);
+    $promedio_calificacion = mysqli_fetch_assoc($resultado_promedio)['promedio_calificacion'];
 
-    // Calcular el nuevo promedio
-    $nuevo_promedio = $total_calificaciones / $total_usuarios;
-
-    // Actualizar la calificación en la tabla de operarios
-    $sql_guardar_calificacion = "UPDATE operarios SET calificacion = $nuevo_promedio WHERE id_operario = $id_operario";
-    if (mysqli_query($conn, $sql_guardar_calificacion)) {
-        echo "¡Gracias por tu calificación!";
+    // Actualizar el promedio de calificaciones en la tabla de operarios
+    $sql_actualizar_promedio = "UPDATE operarios SET calificacion = $promedio_calificacion WHERE id_operario = $id_operario";
+    if (mysqli_query($conn, $sql_actualizar_promedio)) {
+        echo "Promedio de calificación actualizado correctamente.";
     } else {
-        echo "Error al guardar la calificación: " . mysqli_error($conn);
+        echo "Error al actualizar el promedio de calificación: " . mysqli_error($conn);
     }
 }
 
@@ -94,21 +101,20 @@ if ($id_solicitante) {
 
                 // Aquí se mostrará el formulario de calificación si el estado es "Entregado"
                 if ($solicitud['estado'] == 'Entregado') {
-                    // Obtener la calificación actual del operario
+                    // Obtener la calificación actual del operario para la solicitud específica
                     $id_operario = $solicitud['id_operario'];
-                    $sql_calificacion_operario = "SELECT calificacion FROM operarios WHERE id_operario = $id_operario";
-                    $resultado_calificacion_operario = mysqli_query($conn, $sql_calificacion_operario);
-                    $calificacion_operario = mysqli_fetch_assoc($resultado_calificacion_operario)['calificacion'];
+                    $sql_calificacion_actual = "SELECT calificacion FROM calificaciones WHERE id_operario = $id_operario AND id_solicitud = " . $solicitud['id'];
+                    $resultado_calificacion_actual = mysqli_query($conn, $sql_calificacion_actual);
+                    $calificacion_actual = mysqli_fetch_assoc($resultado_calificacion_actual)['calificacion'];
 
                     echo "<div>";
                     echo "<label for='nueva_calificacion'>Calificación (1-5):</label>";
-                    echo "<input type='radio' name='nueva_calificacion' value='1' " . ($calificacion_operario == 1 ? "checked" : "") . ">1";
-                    echo "<input type='radio' name='nueva_calificacion' value='2' " . ($calificacion_operario == 2 ? "checked" : "") . ">2";
-                    echo "<input type='radio' name='nueva_calificacion' value='3' " . ($calificacion_operario == 3 ? "checked" : "") . ">3";
-                    echo "<input type='radio' name='nueva_calificacion' value='4' " . ($calificacion_operario == 4 ? "checked" : "") . ">4";
-                    echo "<input type='radio' name='nueva_calificacion' value='5' " . ($calificacion_operario == 5 ? "checked" : "") . ">5";
+                    for ($i = 1; $i <= 5; $i++) {
+                        $checked = ($calificacion_actual == $i) ? "checked" : "";
+                        echo "<input type='radio' name='nueva_calificacion' value='$i' $checked>$i";
+                    }
                     echo "</div>";
-                    echo "<input type='submit' name='submit_nueva_calificacion' value='Cambiar Calificación'>";
+                    echo "<input type='submit' name='submit_nueva_calificacion' value='Calificar'>";
                 }
 
                 echo "</form>";

@@ -8,10 +8,10 @@ $id_solicitud = isset($_GET['id_solicitud']) ? $_GET['id_solicitud'] : null;
 if ($id_solicitud) {
     // Consulta para obtener los mensajes de la solicitud actual
     $sql_mensajes = "SELECT mensajes.*, usuarios.nombre AS nombre_usuario 
-                     FROM mensajes 
-                     JOIN usuarios ON mensajes.id_usuario = usuarios.id 
-                     WHERE mensajes.id_solicitud = $id_solicitud 
-                     ORDER BY mensajes.fecha_envio ASC";
+                        FROM mensajes 
+                        JOIN usuarios ON mensajes.id_usuario = usuarios.id 
+                        WHERE mensajes.id_solicitud = $id_solicitud 
+                        ORDER BY mensajes.fecha_envio ASC";
     $resultado_mensajes = mysqli_query($conn, $sql_mensajes);
 
     if ($resultado_mensajes) {

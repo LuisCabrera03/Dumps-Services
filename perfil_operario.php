@@ -11,7 +11,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modelo_motocarro = $_POST['modelo'];
     $año_motocarro = $_POST['año'];
     $placa_motocarro = $_POST['placa'];
-
     $direccion_domicilio = $_POST['direccion'];
     $otros_detalles = $_POST['detalles'];
 
@@ -28,12 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Manejar la carga de las fotos adicionales
     $ruta_fotos_adicionales = array();
     for ($i = 1; $i <= 10; $i++) {
-        if ($_FILES["foto_$i"]["error"] === UPLOAD_ERR_OK) {
+        if (isset($_FILES["foto_$i"]) && $_FILES["foto_$i"]["error"] === UPLOAD_ERR_OK) {
             $nombre_temporal = $_FILES["foto_$i"]["tmp_name"];
             $nombre_archivo = $_FILES["foto_$i"]["name"];
             $ruta_destino = 'media/fotos/' . $nombre_archivo;
             move_uploaded_file($nombre_temporal, $ruta_destino);
-            $ruta_fotos_adicionales[] = $ruta_destino;
+            $ruta_fotos_adicionales[$i] = $ruta_destino;
+        } else {
+            $ruta_fotos_adicionales[$i] = null; // Si no hay foto adicional, poner null
         }
     }
 
@@ -74,26 +75,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ruta_seguro_vehiculo = $ruta_destino;
     }
 
-// Insertar los datos en la tabla de operarios
-$sql = "INSERT INTO operarios (id_usuario, marca_motocarro, modelo_motocarro, año_motocarro, placa_motocarro, foto_motocarro, direccion_domicilio, otros_detalles, certificado_antecedentes_judiciales, certificado_seguridad_social, licencia_conduccion, seguro_vehiculo";
-for ($i = 2; $i <= 10; $i++) {
-    $sql .= ", foto_$i"; // Utilizar las columnas foto_2, foto_3, ..., foto_10
-}
-$sql .= ") VALUES ('$id_usuario', '$marca_motocarro', '$modelo_motocarro', '$año_motocarro', '$placa_motocarro', '$ruta_foto_motocarro', '$direccion_domicilio', '$otros_detalles', '$ruta_certificado_antecedentes', '$ruta_certificado_seguridad', '$ruta_licencia_conduccion', '$ruta_seguro_vehiculo'";
-for ($i = 2; $i <= 10; $i++) {
-    if ($i - 1 <= count($ruta_fotos_adicionales)) {
-        $sql .= ", '" . $ruta_fotos_adicionales[$i - 2] . "'"; // Utilizar las rutas de las fotos adicionales
-    } else {
-        $sql .= ", NULL"; // Si no hay ruta disponible, insertar NULL
+    // Insertar los datos en la tabla de operarios
+    $sql = "INSERT INTO operarios (id_usuario, marca_motocarro, modelo_motocarro, año_motocarro, placa_motocarro, foto_motocarro, direccion_domicilio, otros_detalles, certificado_antecedentes_judiciales, certificado_seguridad_social, licencia_conduccion, seguro_vehiculo";
+    for ($i = 2; $i <= 10; $i++) {
+        $sql .= ", foto_$i"; // Utilizar las columnas foto_2, foto_3, ..., foto_10
     }
-}
-$sql .= ")";
+    $sql .= ") VALUES ('$id_usuario', '$marca_motocarro', '$modelo_motocarro', '$año_motocarro', '$placa_motocarro', '$ruta_foto_motocarro', '$direccion_domicilio', '$otros_detalles', '$ruta_certificado_antecedentes', '$ruta_certificado_seguridad', '$ruta_licencia_conduccion', '$ruta_seguro_vehiculo'";
+    for ($i = 2; $i <= 10; $i++) {
+        $sql .= ", " . ($ruta_fotos_adicionales[$i] ? "'" . $ruta_fotos_adicionales[$i] . "'" : "NULL");
+    }
+    $sql .= ")";
 
-if (mysqli_query($conn, $sql)) {
-    echo "Operario registrado correctamente.";
-} else {
-    echo "Error al registrar operario: " . mysqli_error($conn);
-}
+    if (mysqli_query($conn, $sql)) {
+        echo "Operario registrado correctamente.";
+    } else {
+        echo "Error al registrar operario: " . mysqli_error($conn);
+    }
 
     // Cerrar la conexión a la base de datos
     mysqli_close($conn);
@@ -290,19 +287,19 @@ if (mysqli_query($conn, $sql)) {
             <div class="row">
                 <div class="form-group">
                     <label for="marca">Marca del Motocarro:</label>
-                    <input type="text" id="marca" name="marca" required>
+                    <input type="text" id="marca" name="marca">
                 </div>
                 <div class="form-group">
                     <label for="modelo">Modelo del Motocarro:</label>
-                    <input type="text" id="modelo" name="modelo" required>
+                    <input type="text" id="modelo" name="modelo">
                 </div>
                 <div class="form-group">
                     <label for="año">Año de Fabricación:</label>
-                    <input type="number" id="año" name="año" required>
+                    <input type="number" id="año" name="año">
                 </div>
                 <div class="form-group">
                     <label for="placa">Placa del Motocarro:</label>
-                    <input type="text" id="placa" name="placa" required>
+                    <input type="text" id="placa" name="placa">
                 </div>
             </div>
 
@@ -310,11 +307,11 @@ if (mysqli_query($conn, $sql)) {
             <div class="row">
                 <div class="form-group">
                     <label for="foto">Foto del Motocarro:</label>
-                    <input type="file" id="foto" name="foto" accept="image/*" required>
+                    <input type="file" id="foto" name="foto" accept="image/*">
                 </div>
                 <div class="form-group">
                     <label for="direccion">Dirección del Domicilio:</label>
-                    <input type="text" id="direccion" name="direccion" required>
+                    <input type="text" id="direccion" name="direccion">
                 </div>
                 <?php for ($i = 1; $i <= 2; $i++) : ?>
                 <div class="form-group">
