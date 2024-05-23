@@ -4,19 +4,51 @@ include 'conexion.php';
 // Manejo de la eliminación de usuario
 if (isset($_GET['delete'])) {
     $userId = $_GET['delete'];
-    
-    // Eliminar todos los mensajes del usuario primero
-    $sql_delete_messages = "DELETE FROM mensajes WHERE id_usuario = $userId";
-    if ($conn->query($sql_delete_messages) === TRUE) {
+
+    // Iniciar una transacción
+    $conn->begin_transaction();
+
+    try {
+        // Eliminar todos los mensajes del usuario primero
+        $sql_delete_messages = "DELETE FROM mensajes WHERE id_usuario = $userId";
+        if ($conn->query($sql_delete_messages) !== TRUE) {
+            throw new Exception("Error al eliminar mensajes del usuario: " . $conn->error);
+        }
+
+        // Obtener todos los operarios del usuario
+        $sql_select_operarios = "SELECT id_operario FROM operarios WHERE id_usuario = $userId";
+        $result_operarios = $conn->query($sql_select_operarios);
+        if ($result_operarios->num_rows > 0) {
+            while ($row_operario = $result_operarios->fetch_assoc()) {
+                $operarioId = $row_operario['id_operario'];
+
+                // Eliminar todas las solicitudes del operario
+                $sql_delete_solicitudes = "DELETE FROM solicitudes WHERE id_operario = $operarioId";
+                if ($conn->query($sql_delete_solicitudes) !== TRUE) {
+                    throw new Exception("Error al eliminar solicitudes del operario: " . $conn->error);
+                }
+            }
+        }
+
+        // Eliminar todos los operarios del usuario
+        $sql_delete_operarios = "DELETE FROM operarios WHERE id_usuario = $userId";
+        if ($conn->query($sql_delete_operarios) !== TRUE) {
+            throw new Exception("Error al eliminar operarios del usuario: " . $conn->error);
+        }
+
         // Luego eliminar el usuario
         $sql_delete_user = "DELETE FROM usuarios WHERE id = $userId";
-        if ($conn->query($sql_delete_user) === TRUE) {
-            echo "Usuario eliminado correctamente";
-        } else {
-            echo "Error al eliminar usuario: " . $conn->error;
+        if ($conn->query($sql_delete_user) !== TRUE) {
+            throw new Exception("Error al eliminar usuario: " . $conn->error);
         }
-    } else {
-        echo "Error al eliminar mensajes del usuario: " . $conn->error;
+
+        // Confirmar la transacción
+        $conn->commit();
+        echo "Usuario eliminado correctamente";
+    } catch (Exception $e) {
+        // Revertir la transacción en caso de error
+        $conn->rollback();
+        echo $e->getMessage();
     }
 }
 
@@ -26,7 +58,7 @@ if (isset($_POST['edit_user'])) {
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
     $rol = $_POST['rol'];
-    
+
     $sql = "UPDATE usuarios SET nombre='$nombre', correo='$correo', rol='$rol' WHERE id = $userId";
     if ($conn->query($sql) === TRUE) {
         echo "Usuario actualizado correctamente";
@@ -102,7 +134,7 @@ $result = $conn->query($sql);
                             <a href='edit_usuario.php?id={$row['id']}' class='edit-btn'>Editar</a>
                             <a href='admin_usuarios.php?delete={$row['id']}' class='delete-btn'>Eliminar</a>
                         </td>
-                      </tr>";
+                    </tr>";
             }
         } else {
             echo "<tr><td colspan='5'>No se encontraron usuarios</td></tr>";

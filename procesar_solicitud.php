@@ -22,7 +22,7 @@ $estado_predeterminado = 'Espera';
 
 // Aquí puedes agregar lógica adicional, como guardar la solicitud en la base de datos
 $sql_solicitud = "INSERT INTO solicitudes (id_operario, id_solicitante, direccion_acarreo, detalles_acarreo, estado) 
-                  VALUES ('$id_operario', '$id_solicitante', '$direccion_acarreo', '$detalles_acarreo', '$estado_predeterminado')";
+                    VALUES ('$id_operario', '$id_solicitante', '$direccion_acarreo', '$detalles_acarreo', '$estado_predeterminado')";
 
 if (mysqli_query($conn, $sql_solicitud)) {
     // Si la solicitud se envía correctamente, redirigir a solicitante.php

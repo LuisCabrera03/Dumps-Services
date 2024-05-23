@@ -4,55 +4,85 @@ include 'conexion.php';
 
 // Variables para almacenar mensajes de éxito o error
 $mensaje = '';
+$errores = [];
+$cuentaCreada = false; // Nueva variable para verificar si la cuenta se creó correctamente
 
 // Verificar si se ha enviado el formulario de creación de cuenta
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Verificar si se han enviado los datos necesarios
-    if (isset($_POST['nombre']) && isset($_POST['apellidos']) && isset($_POST['fecha_nacimiento']) && isset($_POST['tipo_documento']) && isset($_POST['numero_documento']) && isset($_POST['correo']) && isset($_POST['rol']) && isset($_POST['contrasena']) && isset($_POST['confirmar_contrasena'])) {
-        // Obtener los valores del formulario
-        $nombre = $_POST['nombre'];
-        $apellidos = $_POST['apellidos'];
-        $fecha_nacimiento = $_POST['fecha_nacimiento'];
-        $tipo_documento = $_POST['tipo_documento'];
-        $numero_documento = $_POST['numero_documento'];
-        $telefono = $_POST['telefono'];
+    // Obtener los valores del formulario
+    $nombre = trim($_POST['nombre']);
+    $apellidos = trim($_POST['apellidos']);
+    $fecha_nacimiento = trim($_POST['fecha_nacimiento']);
+    $tipo_documento = trim($_POST['tipo_documento']);
+    $numero_documento = trim($_POST['numero_documento']);
+    $telefono = trim($_POST['telefono']);
+    $correo = trim($_POST['correo']);
+    $rol = trim($_POST['rol']);
+    $contrasena = $_POST['contrasena'];
+    $confirmar_contrasena = $_POST['confirmar_contrasena'];
 
-        $correo = $_POST['correo'];
-        $rol = $_POST['rol'];
-        $contrasena = $_POST['contrasena'];
-        $confirmar_contrasena = $_POST['confirmar_contrasena'];
+    // Validaciones del lado del servidor
+    if (empty($nombre)) {
+        $errores['nombre'] = "El nombre es obligatorio.";
+    }
+    if (empty($apellidos)) {
+        $errores['apellidos'] = "Los apellidos son obligatorios.";
+    }
+    if (empty($fecha_nacimiento)) {
+        $errores['fecha_nacimiento'] = "La fecha de nacimiento es obligatoria.";
+    }
+    if (empty($tipo_documento)) {
+        $errores['tipo_documento'] = "El tipo de documento es obligatorio.";
+    }
+    if (empty($numero_documento)) {
+        $errores['numero_documento'] = "El número de documento es obligatorio.";
+    } elseif (!ctype_digit($numero_documento)) {
+        $errores['numero_documento'] = "El número de documento debe ser numérico.";
+    }
+    if (empty($telefono)) {
+        $errores['telefono'] = "El teléfono es obligatorio.";
+    } elseif (!ctype_digit($telefono)) {
+        $errores['telefono'] = "El teléfono debe ser numérico.";
+    }
+    if (empty($correo)) {
+        $errores['correo'] = "El correo electrónico es obligatorio.";
+    } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        $errores['correo'] = "El correo electrónico no es válido.";
+    }
+    if (empty($rol)) {
+        $errores['rol'] = "El rol es obligatorio.";
+    }
+    if (empty($contrasena)) {
+        $errores['contrasena'] = "La contraseña es obligatoria.";
+    } elseif ($contrasena !== $confirmar_contrasena) {
+        $errores['contrasena'] = "Las contraseñas no coinciden.";
+    }
 
-        // Verificar si las contraseñas coinciden
-        if ($contrasena !== $confirmar_contrasena) {
-            $mensaje = "Las contraseñas no coinciden.";
+    // Verificar si el correo ya existe en la base de datos
+    if (empty($errores)) {
+        $sql_verificar_usuario = "SELECT id FROM usuarios WHERE correo = '$correo'";
+        $resultado_verificar_usuario = $conn->query($sql_verificar_usuario);
+
+        if ($resultado_verificar_usuario->num_rows > 0) {
+            $errores['correo'] = "Ya existe una cuenta asociada a este correo electrónico.";
+        }
+    }
+
+    if (empty($errores)) {
+        // Insertar el usuario en la base de datos
+        $sql_insertar_usuario = "INSERT INTO usuarios (nombre, apellidos, fecha_nacimiento, tipo_documento, numero_documento, correo, rol, contrasena, telefono) VALUES ('$nombre', '$apellidos', '$fecha_nacimiento', '$tipo_documento', '$numero_documento', '$correo', '$rol', '$contrasena', '$telefono')";
+
+        if ($conn->query($sql_insertar_usuario) === TRUE) {
+            $cuentaCreada = true; // Establecer la variable a true si la cuenta se creó correctamente
         } else {
-            // Consulta para verificar si el usuario ya existe en la base de datos
-            $sql_verificar_usuario = "SELECT id FROM usuarios WHERE correo = '$correo'";
-            $resultado_verificar_usuario = $conn->query($sql_verificar_usuario);
-
-            if ($resultado_verificar_usuario->num_rows > 0) {
-                // El usuario ya existe, mostrar mensaje de error
-                $mensaje = "Ya existe una cuenta asociada a este correo electrónico.";
-            } else {
-                // El usuario no existe, proceder con la creación de la cuenta
-                $sql_insertar_usuario = "INSERT INTO usuarios (nombre, apellidos, fecha_nacimiento, tipo_documento, numero_documento, correo, rol, contrasena, telefono) VALUES ('$nombre', '$apellidos', '$fecha_nacimiento', '$tipo_documento', '$numero_documento', '$correo', '$rol', '$contrasena', '$telefono')";
-
-                if ($conn->query($sql_insertar_usuario) === TRUE) {
-                    // La cuenta se creó correctamente, redirigir a login.php
-                    header("Location: login.php");
-                    exit(); // Es importante incluir exit() después de header() para evitar que se ejecute más código
-                } else {
-                    // Error al crear la cuenta, mostrar mensaje de error
-                    $mensaje = "Error al crear la cuenta: " . $conn->error;
-                }
-            }
+            $mensaje = "Error al crear la cuenta: " . $conn->error;
         }
     } else {
-        // No se enviaron todos los datos necesarios, mostrar mensaje de error
-        $mensaje = "Por favor, complete todos los campos.";
+        $mensaje = "Por favor, corrija los errores en el formulario.";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -61,6 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Crear Cuenta - Dump Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     <style>
         /* Variables CSS */
         :root {
@@ -178,6 +209,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             transform: translateY(-1px);
         }
 
+        .form-group span.error {
+            color: red;
+            font-size: 0.9em;
+            display: block;
+            margin-top: 5px;
+        }
+
         .form-group p {
             margin-top: 10px;
             text-align: center;
@@ -203,7 +241,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h2>Crear Cuenta</h2>
 
         <?php
-        // Mostrar mensajes de éxito o error
+        // Mostrar mensaje general de error
         if (!empty($mensaje)) {
             echo "<p>$mensaje</p>";
         }
@@ -212,54 +250,92 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
             <div class="form-group">
                 <label for="nombre">Nombres:</label>
-                <input type="text" id="nombre" name="nombre" required>
+                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($nombre ?? ''); ?>">
+                <?php if (isset($errores['nombre'])) echo '<span class="error">'.$errores['nombre'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="apellidos">Apellidos:</label>
-                <input type="text" id="apellidos" name="apellidos" required>
+                <input type="text" id="apellidos" name="apellidos" value="<?php echo htmlspecialchars($apellidos ?? ''); ?>">
+                <?php if (isset($errores['apellidos'])) echo '<span class="error">'.$errores['apellidos'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($fecha_nacimiento ?? ''); ?>">
+                <?php if (isset($errores['fecha_nacimiento'])) echo '<span class="error">'.$errores['fecha_nacimiento'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="telefono">Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" required>
+                <input type="number" id="telefono" name="telefono" value="<?php echo htmlspecialchars($telefono ?? ''); ?>">
+                <?php if (isset($errores['telefono'])) echo '<span class="error">'.$errores['telefono'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="tipo_documento">Tipo de Documento:</label>
-                <select id="tipo_documento" name="tipo_documento" required>
-                    <option value="CC">Cédula de Ciudadanía</option>
-                    <option value="CE">Cédula de Extranjería</option>
+                <select id="tipo_documento" name="tipo_documento">
+                    <option value="">Seleccione</option>
+                    <option value="CC" <?php echo (isset($tipo_documento) && $tipo_documento == 'CC') ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
+                    <option value="CE" <?php echo (isset($tipo_documento) && $tipo_documento == 'CE') ? 'selected' : ''; ?>>Cédula de Extranjería</option>
                 </select>
+                <?php if (isset($errores['tipo_documento'])) echo '<span class="error">'.$errores['tipo_documento'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="numero_documento">Número de Documento:</label>
-                <input type="text" id="numero_documento" name="numero_documento" required>
+                <input type="number" id="numero_documento" name="numero_documento" value="<?php echo htmlspecialchars($numero_documento ?? ''); ?>">
+                <?php if (isset($errores['numero_documento'])) echo '<span class="error">'.$errores['numero_documento'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="correo">Correo Electrónico:</label>
-                <input type="email" id="correo" name="correo" required>
+                <input type="email" id="correo" name="correo" value="<?php echo htmlspecialchars($correo ?? ''); ?>">
+                <?php if (isset($errores['correo'])) echo '<span class="error">'.$errores['correo'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="rol">Rol:</label>
-                <select id="rol" name="rol" required>
-                    <option value="operador_logistico">Operador Logístico</option>
-                    <option value="solicitante_transporte">Solicitante de Transporte</option>
+                <select id="rol" name="rol">
+                    <option value="">Seleccione</option>
+                    <option value="operador_logistico" <?php echo (isset($rol) && $rol == 'operador_logistico') ? 'selected' : ''; ?>>Operador Logístico</option>
+                    <option value="solicitante_transporte" <?php echo (isset($rol) && $rol == 'solicitante_transporte') ? 'selected' : ''; ?>>Solicitante de Transporte</option>
                 </select>
+                <?php if (isset($errores['rol'])) echo '<span class="error">'.$errores['rol'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="contrasena">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" required>
+                <input type="password" id="contrasena" name="contrasena" value="<?php echo htmlspecialchars($contrasena ?? ''); ?>">
+                <?php if (isset($errores['contrasena'])) echo '<span class="error">'.$errores['contrasena'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <label for="confirmar_contrasena">Confirmar Contraseña:</label>
-                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" value="<?php echo htmlspecialchars($confirmar_contrasena ?? ''); ?>">
+                <?php if (isset($errores['confirmar_contrasena'])) echo '<span class="error">'.$errores['confirmar_contrasena'].'</span>'; ?>
             </div>
             <div class="form-group">
                 <button type="submit">Crear Cuenta</button>
             </div>
         </form>
     </div>
+    <?php if ($cuentaCreada): ?>
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var notyf = new Notyf({
+                duration: 5000,
+                position: { x: 'center', y: 'top' },
+                types: [
+                    {
+                        type: 'success',
+                        background: 'green',
+                        icon: {
+                            className: 'fas fa-check-circle',
+                            tagName: 'i',
+                            text: ''
+                        }
+                    }
+                ]
+            });
+            notyf.success('Cuenta creada correctamente. Redirigiendo...');
+            setTimeout(function() {
+                window.location.href = 'login.php';
+            }, 3000); 
+        });
+    </script>
+    <?php endif; ?>
 </body>
 </html>

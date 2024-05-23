@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2024 a las 19:59:04
+-- Tiempo de generación: 23-05-2024 a las 18:06:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -26,6 +26,27 @@ USE `dump`;
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `calificaciones`
+--
+
+CREATE TABLE `calificaciones` (
+  `id` int(11) NOT NULL,
+  `id_operario` int(11) NOT NULL,
+  `id_solicitud` int(11) NOT NULL,
+  `calificacion` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `calificaciones`
+--
+
+INSERT INTO `calificaciones` (`id`, `id_operario`, `id_solicitud`, `calificacion`) VALUES
+(1, 2, 10, 2),
+(2, 2, 10, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `mensajes`
 --
 
@@ -42,11 +63,10 @@ CREATE TABLE `mensajes` (
 --
 
 INSERT INTO `mensajes` (`id`, `id_solicitud`, `id_usuario`, `mensaje`, `fecha_envio`) VALUES
-(1, 6, 3, 'x', '2024-05-19 17:49:48'),
 (2, 6, 2, 'hola amigo ', '2024-05-19 17:50:04'),
-(3, 6, 3, 'gr\r\n', '2024-05-19 17:56:46'),
-(4, 6, 3, 'paulllll', '2024-05-19 17:57:23'),
-(5, 9, 3, 'kmkmk\r\n', '2024-05-19 18:26:58');
+(7, 10, 8, 'hola\r\n', '2024-05-23 15:59:06'),
+(8, 10, 8, 'holaaaa', '2024-05-23 15:59:26'),
+(9, 10, 6, 'tonces', '2024-05-23 15:59:34');
 
 -- --------------------------------------------------------
 
@@ -85,7 +105,7 @@ CREATE TABLE `operarios` (
 --
 
 INSERT INTO `operarios` (`id_operario`, `id_usuario`, `marca_motocarro`, `modelo_motocarro`, `año_motocarro`, `placa_motocarro`, `foto_motocarro`, `foto_2`, `foto_3`, `foto_4`, `foto_5`, `foto_6`, `foto_7`, `foto_8`, `foto_9`, `foto_10`, `direccion_domicilio`, `certificado_antecedentes_judiciales`, `certificado_seguridad_social`, `licencia_conduccion`, `seguro_vehiculo`, `calificacion`, `otros_detalles`) VALUES
-(1, 3, 'pepe', '2011', 2011, 'eag09c', 'media/fotos/descargar (2).jpg', 'media/fotos/descargar (6).jpg', 'media/fotos/descargar (4).jpg', 'media/fotos/descargar (3).jpg', 'media/fotos/descargar (1).jpg', 'media/fotos/descargar (5).jpg', 'media/fotos/descargar.jpg', 'media/fotos/descargar (2).jpg', 'media/fotos/descargar (5).jpg', 'media/fotos/descargar (5).jpg', 'calle 2', 'media/certificados/antecedentes/RO42hZ9.png', 'media/certificados/seguridad/descargar (4).jpg', 'media/certificados/licencia/descargar (3).jpg', 'media/certificados/seguro/descargar (5).jpg', 3, 'SDFGHGFD');
+(2, 6, 'Honda', '2011', 1924, 'eag09c', 'media/fotos/RO42hZ9.png', 'media/fotos/RO42hZ9.png', 'media/fotos/RO42hZ9.png', 'media/fotos/RO42hZ9.png', 'media/fotos/RO42hZ9.png', 'media/fotos/RO42hZ9.png', 'media/fotos/RO42hZ9.png', NULL, NULL, NULL, 'calle 4b sur #5-11', 'media/certificados/antecedentes/RO42hZ9.png', 'media/certificados/seguridad/RO42hZ9.png', 'media/certificados/licencia/RO42hZ9.png', 'media/certificados/seguro/RO42hZ9.png', 2, 'ENveces la vida no es\r\n');
 
 -- --------------------------------------------------------
 
@@ -108,11 +128,7 @@ CREATE TABLE `solicitudes` (
 --
 
 INSERT INTO `solicitudes` (`id`, `id_operario`, `id_solicitante`, `direccion_acarreo`, `detalles_acarreo`, `fecha_solicitud`, `estado`) VALUES
-(5, 1, 2, 'calle 2', 'ddfdfdfd', '2024-05-19 14:41:19', 'Cancelado'),
-(6, 1, 2, 'calle 2', 'poara ffsds', '2024-05-19 14:43:55', 'Entregado'),
-(7, 1, 2, 'calle 2', 'ddfdfdfd', '2024-05-19 14:50:04', 'Entregado'),
-(8, 1, 2, 'calle 2', 'asasas', '2024-05-19 14:50:16', 'Rechazado'),
-(9, 1, 5, 'sasass', 'asasasa', '2024-05-19 18:25:56', 'Entregado');
+(10, 2, 8, 'calle 4b sur #5-11', 'necesito llevar una lavadora', '2024-05-23 15:58:08', 'Entregado');
 
 -- --------------------------------------------------------
 
@@ -139,12 +155,22 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `fecha_nacimiento`, `tipo_documento`, `numero_documento`, `correo`, `rol`, `contrasena`, `telefono`) VALUES
 (2, 'Luis Alfredo c', 'Cabrera', '2024-04-29', 'cc', '10258748', 'cabrerasarrialu3is@gmail.com', 'solicitante_transporte', '123456789', '3166004016'),
-(3, 'luis', 'Cabrera', '2024-04-29', 'cc', '10258748', 'cabrerasarrialuis@gmail.com', 'operador_logistico', '123456789', '3116554742'),
-(4, 'admin', 'admin', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789', '3259551435');
+(4, 'admin', 'admin', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789', '3259551435'),
+(6, 'Alfredo', 'Cabrera', '2024-04-28', 'cc', '10258748', 'l@gmail.com', 'operador_logistico', '123', '3186004016'),
+(8, 'Alfredo', 'Cabrera', '2024-05-14', 'cc', '10258748', 'admin2@example.com', 'solicitante_transporte', '1234', '3186004016'),
+(9, 'Luis', 'Sarria', '2024-05-05', 'cc', '1004250794', 'admin3@example.com', 'operador_logistico', '1234', '3186004016');
 
 --
 -- Índices para tablas volcadas
 --
+
+--
+-- Indices de la tabla `calificaciones`
+--
+ALTER TABLE `calificaciones`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_operario` (`id_operario`),
+  ADD KEY `id_solicitud` (`id_solicitud`);
 
 --
 -- Indices de la tabla `mensajes`
@@ -178,32 +204,45 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `calificaciones`
+--
+ALTER TABLE `calificaciones`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `mensajes`
 --
 ALTER TABLE `mensajes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `operarios`
 --
 ALTER TABLE `operarios`
-  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudes`
 --
 ALTER TABLE `solicitudes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `calificaciones`
+--
+ALTER TABLE `calificaciones`
+  ADD CONSTRAINT `calificaciones_ibfk_1` FOREIGN KEY (`id_operario`) REFERENCES `operarios` (`id_operario`),
+  ADD CONSTRAINT `calificaciones_ibfk_2` FOREIGN KEY (`id_solicitud`) REFERENCES `solicitudes` (`id`);
 
 --
 -- Filtros para la tabla `mensajes`
