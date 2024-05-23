@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="../Dimp/css/main.css"> 
+    <link rel="stylesheet" href="../Dimp/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
@@ -70,49 +71,50 @@
         <h2 class="text-center-dump mb-4-dump">Testimonios de nuestros clientes</h2>
         <div class="img-container-dump">
             <div class="testimonial-item-dump">
-                <img src="https://blog.ida.cl/wp-content/uploads/sites/5/2019/06/clientesnosabenquequieren.png" alt="Cliente 1" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.">
+                <img src="https://www.gettyimages.com/portrait-of-a-young-woman-outdoors-smiling-portrait" alt="Cliente 1" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.">
                 <div class="testimonial-text-dump">
                     ¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.
                 </div>
             </div>
             <div class="testimonial-item-dump">
-                <img src="https://blog.ida.cl/wp-content/uploads/sites/5/2019/06/clientesnosabenquequieren.png" alt="Cliente 2" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.">
+                <img src="https://www.gettyimages.com/portrait-of-a-young-man-outdoors-smiling-portrait" alt="Cliente 2" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.">
                 <div class="testimonial-text-dump">
                     ¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.
                 </div>
             </div>
             <div class="testimonial-item-dump">
-                <img src="https://blog.ida.cl/wp-content/uploads/sites/5/2019/06/clientesnosabenquequieren.png" alt="Cliente 3" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.">
+                <img src="https://www.gettyimages.com/portrait-of-a-beautiful-hispanic-woman-portrait" alt="Cliente 3" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.">
                 <div class="testimonial-text-dump">
                     ¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.
                 </div>
             </div>
             <div class="testimonial-item-dump">
-                <img src="https://blog.ida.cl/wp-content/uploads/sites/5/2019/06/clientesnosabenquequieren.png" alt="Cliente 4" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.">
+                <img src="https://www.gettyimages.com/happy-customer-experience-portrait" alt="Cliente 4" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.">
                 <div class="testimonial-text-dump">
                     ¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.
                 </div>
             </div>
             <div class="testimonial-item-dump">
-                <img src="https://blog.ida.cl/wp-content/uploads/sites/5/2019/06/clientesnosabenquequieren.png" alt="Cliente 5" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.">
+                <img src="https://www.gettyimages.com/portrait-of-a-happy-customer-portrait" alt="Cliente 5" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.">
                 <div class="testimonial-text-dump">
                     ¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.
                 </div>
             </div>
             <div class="testimonial-item-dump">
-                <img src="https://blog.ida.cl/wp-content/uploads/sites/5/2019/06/clientesnosabenquequieren.png" alt="Cliente 6" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy satisfecho! El proceso de envío fue rápido y fácil.">
+                <img src="https://www.gettyimages.com/happy-customer-review-portrait" alt="Cliente 6" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy satisfecho! El proceso de envío fue rápido y fácil.">
                 <div class="testimonial-text-dump">
                     ¡Muy satisfecho! El proceso de envío fue rápido y fácil.
                 </div>
             </div>
         </div>
     </div>
-
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 </body>
+
 </html>

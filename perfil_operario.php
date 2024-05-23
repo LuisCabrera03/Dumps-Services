@@ -135,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         header, footer {
             width: 100%;
-            background-color: var(--primary-color);
+            background-color: #021027;
             color: #fff;
             text-align: center;
             padding: 10px 0;
@@ -259,23 +259,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Estilos para filas */
         .row {
-            display: block;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
             width: 100%;
         }
 
         .row .form-group {
-            width: calc(33.33% - 20px);
-            float: left;
-            margin-right: 20px;
-        }
-
-        .row .form-group:nth-child(3n) {
-            margin-right: 0;
+            flex: 1 1 calc(33.33% - 20px);
         }
 
         .row.full-width .form-group {
-            width: 100%;
-            float: none;
+            flex: 1 1 100%;
         }
 
         .clearfix::after {
@@ -300,15 +295,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="row clearfix">
                 <div class="form-group">
                     <label for="marca">Marca del Motocarro:</label>
-                    <input type="text" id="marca" name="marca">
+                    <input type="text" id="marca" name="marca" required>
                 </div>
                 <div class="form-group">
                     <label for="modelo">Modelo del Motocarro:</label>
-                    <input type="text" id="modelo" name="modelo">
+                    <input type="text" id="modelo" name="modelo" required>
                 </div>
                 <div class="form-group">
                     <label for="año">Año de Fabricación:</label>
-                    <input type="number" id="año" name="año">
+                    <input type="number" id="año" name="año" required>
                 </div>
             </div>
 
@@ -316,15 +311,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="row clearfix">
                 <div class="form-group">
                     <label for="placa">Placa del Motocarro:</label>
-                    <input type="text" id="placa" name="placa">
+                    <input type="text" id="placa" name="placa" required>
                 </div>
                 <div class="form-group">
                     <label for="foto">Foto del Motocarro:</label>
-                    <input type="file" id="foto" name="foto" accept="image/*">
+                    <input type="file" id="foto" name="foto" accept="image/*" required>
                 </div>
                 <div class="form-group">
                     <label for="direccion">Dirección del Domicilio:</label>
-                    <input type="text" id="direccion" name="direccion">
+                    <input type="text" id="direccion" name="direccion" required>
                 </div>
             </div>
 
@@ -340,14 +335,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="certificado_antecedentes">Certificado de Antecedentes Judiciales:</label>
                     <input type="file" id="certificado_antecedentes" name="certificado_antecedentes" accept="image/*">
                 </div>
+                <div class="form-group full-width">
+                    <label for="certificado_seguridad">Certificado de Seguridad Social:</label>
+                    <input type="file" id="certificado_seguridad" name="certificado_seguridad" accept="image/*">
+                </div>
             </div>
 
             <!-- Fila 4 -->
             <div class="row clearfix">
-                <div class="form-group">
-                    <label for="certificado_seguridad">Certificado de Seguridad Social:</label>
-                    <input type="file" id="certificado_seguridad" name="certificado_seguridad" accept="image/*">
-                </div>
                 <div class="form-group">
                     <label for="licencia_conduccion">Licencia de Conducción:</label>
                     <input type="file" id="licencia_conduccion" name="licencia_conduccion" accept="image/*">
@@ -356,6 +351,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="seguro_vehiculo">Seguro del Vehículo:</label>
                     <input type="file" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*">
                 </div>
+                <?php for ($i = 3; $i <= 6; $i++) : ?>
+                <div class="form-group">
+                    <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
+                    <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                </div>
+                <?php endfor; ?>
                 <div class="form-group full-width">
                     <label for="detalles">Otros Detalles:</label>
                     <textarea id="detalles" name="detalles"></textarea>
@@ -366,6 +367,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
     </div>
-
+    <?php include 'footer.php';?>
 </body>
 </html>
