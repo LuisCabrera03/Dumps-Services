@@ -134,9 +134,6 @@ if (mysqli_query($conn, $sql)) {
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         header, footer {
@@ -265,21 +262,37 @@ if (mysqli_query($conn, $sql)) {
 
         /* Estilos para filas */
         .row {
+            display: block;
             width: 100%;
         }
 
         .row .form-group {
-            width: 100%;
-            margin-bottom: 20px;
+            width: calc(33.33% - 20px);
+            float: left;
+            margin-right: 20px;
+        }
+
+        .row .form-group:nth-child(3n) {
+            margin-right: 0;
         }
 
         .row.full-width .form-group {
             width: 100%;
+            float: none;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
         }
 
     </style>
 </head>
 <body>
+    <header>
+        <h1>Dump Services</h1>
+    </header>
     <div class="container">
         <h2>Registro de Operario</h2>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
@@ -287,7 +300,7 @@ if (mysqli_query($conn, $sql)) {
             <input type="hidden" name="id_usuario" value="<?php echo $_COOKIE['usuario_id']; ?>">
 
             <!-- Fila 1 -->
-            <div class="row">
+            <div class="row clearfix">
                 <div class="form-group">
                     <label for="marca">Marca del Motocarro:</label>
                     <input type="text" id="marca" name="marca" required>
@@ -300,14 +313,14 @@ if (mysqli_query($conn, $sql)) {
                     <label for="año">Año de Fabricación:</label>
                     <input type="number" id="año" name="año" required>
                 </div>
+            </div>
+
+            <!-- Fila 2 -->
+            <div class="row clearfix">
                 <div class="form-group">
                     <label for="placa">Placa del Motocarro:</label>
                     <input type="text" id="placa" name="placa" required>
                 </div>
-            </div>
-
-            <!-- Fila 2 -->
-            <div class="row">
                 <div class="form-group">
                     <label for="foto">Foto del Motocarro:</label>
                     <input type="file" id="foto" name="foto" accept="image/*" required>
@@ -316,20 +329,24 @@ if (mysqli_query($conn, $sql)) {
                     <label for="direccion">Dirección del Domicilio:</label>
                     <input type="text" id="direccion" name="direccion" required>
                 </div>
+            </div>
+
+            <!-- Fila 3 -->
+            <div class="row clearfix">
                 <?php for ($i = 1; $i <= 2; $i++) : ?>
                 <div class="form-group">
                     <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
                     <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
                 </div>
                 <?php endfor; ?>
-            </div>
-
-            <!-- Fila 3 -->
-            <div class="row">
-                <div class="form-group">
+                <div class="form-group full-width">
                     <label for="certificado_antecedentes">Certificado de Antecedentes Judiciales:</label>
                     <input type="file" id="certificado_antecedentes" name="certificado_antecedentes" accept="image/*">
                 </div>
+            </div>
+
+            <!-- Fila 4 -->
+            <div class="row clearfix">
                 <div class="form-group">
                     <label for="certificado_seguridad">Certificado de Seguridad Social:</label>
                     <input type="file" id="certificado_seguridad" name="certificado_seguridad" accept="image/*">
@@ -342,16 +359,6 @@ if (mysqli_query($conn, $sql)) {
                     <label for="seguro_vehiculo">Seguro del Vehículo:</label>
                     <input type="file" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*">
                 </div>
-            </div>
-
-            <!-- Fila 4 -->
-            <div class="row">
-                <?php for ($i = 3; $i <= 6; $i++) : ?>
-                <div class="form-group">
-                    <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
-                    <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
-                </div>
-                <?php endfor; ?>
                 <div class="form-group full-width">
                     <label for="detalles">Otros Detalles:</label>
                     <textarea id="detalles" name="detalles"></textarea>
@@ -362,5 +369,6 @@ if (mysqli_query($conn, $sql)) {
             </div>
         </form>
     </div>
+
 </body>
 </html>
