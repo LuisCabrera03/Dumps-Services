@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="../Dimp/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
@@ -66,45 +67,43 @@
             </div>
         </div>
     </div>
-
     <div class="container-dump mt-5">
-        <h2 class="text-center-dump mb-4-dump">Testimonios de nuestros clientes</h2>
-        <div class="img-container-dump">
-            <div class="testimonial-item-dump">
-                <img src="https://www.gettyimages.com/portrait-of-a-young-woman-outdoors-smiling-portrait" alt="Cliente 1" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.">
-                <div class="testimonial-text-dump">
-                    ¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.
-                </div>
+    <h2 class="text-center-dump mb-4-dump">Testimonios de nuestros clientes</h2>
+    <div class="img-container-dump">
+        <div class="testimonial-item-dump">
+            <img src="https://images.unsplash.com/photo-1573497491208-6b1acb260507" alt="Cliente 1" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.">
+            <div class="testimonial-text-dump">
+                ¡Excelente servicio! Me ayudaron a enviar mis productos de forma rápida y segura.
             </div>
-            <div class="testimonial-item-dump">
-                <img src="https://www.gettyimages.com/portrait-of-a-young-man-outdoors-smiling-portrait" alt="Cliente 2" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.">
-                <div class="testimonial-text-dump">
-                    ¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.
-                </div>
+        </div>
+        <div class="testimonial-item-dump">
+            <img src="https://images.unsplash.com/photo-1607746882042-944635dfe10e" alt="Cliente 2" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.">
+            <div class="testimonial-text-dump">
+                ¡Muy recomendado! Me sorprendió lo eficiente que fue el proceso de envío.
             </div>
-            <div class="testimonial-item-dump">
-                <img src="https://www.gettyimages.com/portrait-of-a-beautiful-hispanic-woman-portrait" alt="Cliente 3" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.">
-                <div class="testimonial-text-dump">
-                    ¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.
-                </div>
+        </div>
+        <div class="testimonial-item-dump">
+            <img src="https://images.unsplash.com/photo-1537511446984-935f663eb1f4" alt="Cliente 3" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.">
+            <div class="testimonial-text-dump">
+                ¡Fantástico servicio al cliente! Siempre están disponibles para responder a mis preguntas.
             </div>
-            <div class="testimonial-item-dump">
-                <img src="https://www.gettyimages.com/happy-customer-experience-portrait" alt="Cliente 4" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.">
-                <div class="testimonial-text-dump">
-                    ¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.
-                </div>
+        </div>
+        <div class="testimonial-item-dump">
+            <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e" alt="Cliente 4" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.">
+            <div class="testimonial-text-dump">
+                ¡Excelente experiencia! El envío llegó en perfectas condiciones y en el tiempo esperado.
             </div>
-            <div class="testimonial-item-dump">
-                <img src="https://www.gettyimages.com/portrait-of-a-happy-customer-portrait" alt="Cliente 5" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.">
-                <div class="testimonial-text-dump">
-                    ¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.
-                </div>
+        </div>
+        <div class="testimonial-item-dump">
+            <img src="https://1.bp.blogspot.com/-xMOJLpr0pMw/WcJSvpUyFaI/AAAAAAAAcEs/u-rCNNGA3lUADk5keZLWcFHdsr9ueAQVwCLcBGAs/s740/Convencer-Cliente.jpg" alt="Cliente 5" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.">
+            <div class="testimonial-text-dump">
+                ¡Increíble servicio! Me ayudaron con mi envío de manera eficiente y sin complicaciones.
             </div>
-            <div class="testimonial-item-dump">
-                <img src="https://www.gettyimages.com/happy-customer-review-portrait" alt="Cliente 6" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy satisfecho! El proceso de envío fue rápido y fácil.">
-                <div class="testimonial-text-dump">
-                    ¡Muy satisfecho! El proceso de envío fue rápido y fácil.
-                </div>
+        </div>
+        <div class="testimonial-item-dump">
+            <img src="https://assets.entrepreneur.com/content/3x2/2000/1634327934-shutterstock-1910069701.jpg" alt="Cliente 6" class="testimonial-img-dump" data-toggle="tooltip" data-placement="top" title="¡Muy satisfecho! El proceso de envío fue rápido y fácil.">
+            <div class="testimonial-text-dump">
+                ¡Muy satisfecho! El proceso de envío fue rápido y fácil.
             </div>
         </div>
     </div>
