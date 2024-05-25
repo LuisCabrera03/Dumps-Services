@@ -82,44 +82,115 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitante de Transporte - Lista de Operarios</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
         .operarios-list {
             display: flex;
             flex-wrap: wrap;
+            justify-content: space-around;
         }
         .operario {
             border: 1px solid #ddd;
             padding: 10px;
             margin: 10px;
-            width: calc(33.333% - 40px);
+            width: calc(33.333% - 20px);
             box-sizing: border-box;
             text-align: center;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .operario img {
             max-width: 100%;
             height: auto;
+            border-radius: 5px;
         }
         @media (max-width: 768px) {
             .operario {
-                width: calc(50% - 40px);
+                width: calc(50% - 20px);
             }
         }
         @media (max-width: 480px) {
             .operario {
-                width: calc(100% - 40px);
+                width: calc(100% - 20px);
             }
         }
         .solicitud-button {
-            margin-top: 20px;
-            display: block;
+            margin-top: 10px;
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .solicitud-button:hover {
+            background-color: #0056b3;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #0056b3;
+        }
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Lista de Operarios Disponibles</h2>
+        <div class="operarios-list">
+            <div class="operario">
+                <img src="https://via.placeholder.com/300" alt="Operario 1">
+                <h3>Nombre Operario 1</h3>
+                <p>Descripción del operario y sus servicios.</p>
+                <a href="#" class="solicitud-button">Solicitar Transporte</a>
+            </div>
+            <div class="operario">
+                <img src="https://via.placeholder.com/300" alt="Operario 2">
+                <h3>Nombre Operario 2</h3>
+                <p>Descripción del operario y sus servicios.</p>
+                <a href="#" class="solicitud-button">Solicitar Transporte</a>
+            </div>
+            <div class="operario">
+                <img src="https://via.placeholder.com/300" alt="Operario 3">
+                <h3>Nombre Operario 3</h3>
+                <p>Descripción del operario y sus servicios.</p>
+                <a href="#" class="solicitud-button">Solicitar Transporte</a>
+            </div>
+            <div class="operario">
+                <img src="https://via.placeholder.com/300" alt="Operario 4">
+                <h3>Nombre Operario 4</h3>
+                <p>Descripción del operario y sus servicios.</p>
+                <a href="#" class="solicitud-button">Solicitar Transporte</a>
+            </div>
+            <div class="operario">
+                <img src="https://via.placeholder.com/300" alt="Operario 5">
+                <h3>Nombre Operario 5</h3>
+                <p>Descripción del operario y sus servicios.</p>
+                <a href="#" class="solicitud-button">Solicitar Transporte</a>
+            </div>
+        </div>
+    </div>
 
+    <?php include 'footer.php'; ?>
 </body>
 </html>
-</html>
-<?php
-    include 'footer.php';
-?>
-

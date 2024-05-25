@@ -48,7 +48,6 @@ $sql7 = "SELECT rol, COUNT(id) AS num_usuarios
          GROUP BY rol";
 $result7 = $conn->query($sql7);
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -56,98 +55,190 @@ $result7 = $conn->query($sql7);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #0056b3;
+        }
+
+        a {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            text-align: center;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
         table {
             border-collapse: collapse;
-            width: 50%;
-            margin: auto;
-            margin-bottom: 20px;
+            width: 80%;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
-            border: 1px solid black;
-            padding: 8px;
+            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
+            color: #333;
         }
-        canvas {
-            margin: auto;
-            display: block;
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .chart-container {
+            margin: 20px auto;
+            text-align: center;
             max-width: 800px;
-            max-height: 400px;
-            margin-bottom: 20px;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
         }
     </style>
 </head>
 <body>
-
     <h2>Panel de Control</h2>
-<a href="admin_usuarios.php">Gestion de usuarios</a>
-    <div style="text-align: center;">
+    <a href="admin_usuarios.php">Gestión de usuarios</a>
+
+    <div class="chart-container">
         <h3>Número de mensajes por usuario:</h3>
         <canvas id="mensajesChart"></canvas>
     </div>
 
-    <div style="text-align: center;">
+    <div class="chart-container">
         <h3>Número de solicitudes por operario:</h3>
         <canvas id="solicitudesChart"></canvas>
     </div>
 
-    <div style="text-align: center;">
+    <div class="chart-container">
         <h3>Número de mensajes por fecha:</h3>
         <canvas id="mensajesPorFechaChart"></canvas>
     </div>
 
-    <div style="text-align: center;">
+    <div class="chart-container">
         <h3>Distribución de estados de las solicitudes:</h3>
         <canvas id="estadosSolicitudesChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h3>Distribución de usuarios por rol:</h3>
+        <canvas id="usuariosPorRolChart"></canvas>
     </div>
 
     <div>
         <h3>Usuarios activos (última semana):</h3>
         <table>
-            <tr>
-                <th>Usuario</th>
-                <th>Número de Mensajes</th>
-            </tr>
-            <?php
-            while ($row5 = $result5->fetch_assoc()) {
-                echo "<tr><td>" . $row5["nombre"] . "</td><td>" . $row5["num_mensajes"] . "</td></tr>";
-            }
-            ?>
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Número de Mensajes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row5 = $result5->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo $row5["nombre"]; ?></td>
+                    <td><?php echo $row5["num_mensajes"]; ?></td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
         </table>
     </div>
 
     <div>
         <h3>Operarios con calificación promedio:</h3>
         <table>
-            <tr>
-                <th>Operario</th>
-                <th>Calificación Promedio</th>
-            </tr>
-            <?php
-            while ($row6 = $result6->fetch_assoc()) {
-                echo "<tr><td>" . $row6["id_operario"] . "</td><td>" . $row6["calificacion_promedio"] . "</td></tr>";
-            }
-            ?>
+            <thead>
+                <tr>
+                    <th>Operario</th>
+                    <th>Calificación Promedio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($row6 = $result6->fetch_assoc()): ?>
+                <tr>
+                    <td><?php echo $row6["id_operario"]; ?></td>
+                    <td><?php echo $row6["calificacion_promedio"]; ?></td>
+                </tr>
+                <?php endwhile; ?>
+            </tbody>
         </table>
     </div>
 
-    <div style="text-align: center;">
-        <h3>Distribución de usuarios por rol:</h3>
-        <canvas id="usuariosPorRolChart"></canvas>
-    </div>
-
     <script>
-        var ctx1 = document.getElementById('mensajesChart').getContext('2d');
-        var ctx2 = document.getElementById('solicitudesChart').getContext('2d');
-        var ctx3 = document.getElementById('mensajesPorFechaChart').getContext('2d');
-        var ctx4 = document.getElementById('estadosSolicitudesChart').getContext('2d');
-        var ctx5 = document.getElementById('usuariosPorRolChart').getContext('2d');
+        const createChart = (ctx, type, labels, data, label, backgroundColor, borderColor) => {
+            return new Chart(ctx, {
+                type: type,
+                plugins: [ChartDataLabels],
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: label,
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        borderColor: borderColor,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        datalabels: {
+                            color: 'white',
+                            display: function(context) {
+                                return context.dataset.data[context.dataIndex] > 0;
+                            },
+                            font: {
+                                weight: 'bold'
+                            },
+                            formatter: Math.round
+                        }
+                    },
+                    animation: {
+                        duration: 2000,
+                        easing: 'easeInOutBounce'
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        };
 
         <?php
-        // Datos para el gráfico de mensajes por usuario
+        // Datos para los gráficos
         $labels1 = [];
         $data1 = [];
         while ($row = $result->fetch_assoc()) {
@@ -155,7 +246,6 @@ $result7 = $conn->query($sql7);
             $data1[] = $row['num_mensajes'];
         }
 
-        // Datos para el gráfico de solicitudes por operario
         $labels2 = [];
         $data2 = [];
         while ($row2 = $result2->fetch_assoc()) {
@@ -163,7 +253,6 @@ $result7 = $conn->query($sql7);
             $data2[] = $row2['num_solicitudes'];
         }
 
-        // Datos para el gráfico de mensajes por fecha
         $labels3 = [];
         $data3 = [];
         while ($row3 = $result3->fetch_assoc()) {
@@ -171,7 +260,6 @@ $result7 = $conn->query($sql7);
             $data3[] = $row3['num_mensajes'];
         }
 
-        // Datos para el gráfico de distribución de estados de las solicitudes
         $labels4 = [];
         $data4 = [];
         while ($row4 = $result4->fetch_assoc()) {
@@ -179,7 +267,6 @@ $result7 = $conn->query($sql7);
             $data4[] = $row4['num_solicitudes'];
         }
 
-        // Datos para el gráfico de usuarios por rol
         $labels5 = [];
         $data5 = [];
         while ($row7 = $result7->fetch_assoc()) {
@@ -188,117 +275,69 @@ $result7 = $conn->query($sql7);
         }
         ?>
 
-        var mensajesChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: [<?php echo implode(',', $labels1); ?>],
-                datasets: [{
-                    label: 'Número de Mensajes',
-                    data: [<?php echo implode(',', $data1); ?>],
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        createChart(
+            document.getElementById('mensajesChart').getContext('2d'),
+            'bar',
+            [<?php echo implode(',', $labels1); ?>],
+            [<?php echo implode(',', $data1); ?>],
+            'Número de Mensajes',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(54, 162, 235, 1)'
+        );
 
-        var solicitudesChart = new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: [<?php echo implode(',', $labels2); ?>],
-                datasets: [{
-                    label: 'Número de Solicitudes',
-                    data: [<?php echo implode(',', $data2); ?>],
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        createChart(
+            document.getElementById('solicitudesChart').getContext('2d'),
+            'bar',
+            [<?php echo implode(',', $labels2); ?>],
+            [<?php echo implode(',', $data2); ?>],
+            'Número de Solicitudes',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 99, 132, 1)'
+        );
 
-        var mensajesPorFechaChart = new Chart(ctx3, {
-            type: 'line',
-            data: {
-                labels: [<?php echo implode(',', $labels3); ?>],
-                datasets: [{
-                    label: 'Número de Mensajes',
-                    data: [<?php echo implode(',', $data3); ?>],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        createChart(
+            document.getElementById('mensajesPorFechaChart').getContext('2d'),
+            'line',
+            [<?php echo implode(',', $labels3); ?>],
+            [<?php echo implode(',', $data3); ?>],
+            'Número de Mensajes',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(75, 192, 192, 1)'
+        );
 
-        var estadosSolicitudesChart = new Chart(ctx4, {
-            type: 'pie',
-            data: {
-                labels: [<?php echo implode(',', $labels4); ?>],
-                datasets: [{
-                    label: 'Distribución de Estados de las Solicitudes',
-                    data: [<?php echo implode(',', $data4); ?>],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            }
-        });
+        createChart(
+            document.getElementById('estadosSolicitudesChart').getContext('2d'),
+            'pie',
+            [<?php echo implode(',', $labels4); ?>],
+            [<?php echo implode(',', $data4); ?>],
+            'Distribución de Estados de las Solicitudes',
+            [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ]
+        );
 
-        var usuariosPorRolChart = new Chart(ctx5, {
-            type: 'bar',
-            data: {
-                labels: [<?php echo implode(',', $labels5); ?>],
-                datasets: [{
-                    label: 'Número de Usuarios',
-                    data: [<?php echo implode(',', $data5); ?>],
-                    backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
+        createChart(
+            document.getElementById('usuariosPorRolChart').getContext('2d'),
+            'bar',
+            [<?php echo implode(',', $labels5); ?>],
+            [<?php echo implode(',', $data5); ?>],
+            'Número de Usuarios',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(255, 206, 86, 1)'
+        );
     </script>
 </body>
 </html>

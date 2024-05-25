@@ -17,7 +17,6 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -25,39 +24,80 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ver Usuario</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
         .container {
-            width: 300px;
-            margin: auto;
+            width: 100%;
+            max-width: 600px;
             padding: 20px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         h2, h3 {
             text-align: center;
+            color: #0056b3;
+            margin-bottom: 20px;
         }
+
         .detail {
             margin-bottom: 10px;
         }
+
         .password-container {
             display: flex;
             align-items: center;
         }
+
         .password-container input {
             border: none;
             background: none;
             outline: none;
         }
+
         .toggle-btn {
             margin-left: 10px;
             cursor: pointer;
             color: blue;
             text-decoration: underline;
         }
+
+        .image-container {
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
         .image-container img {
             width: 100%;
             height: auto;
-            margin-bottom: 10px;
+            display: block;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #0056b3;
         }
     </style>
     <script>
@@ -125,7 +165,7 @@ if (isset($_GET['id'])) {
         <?php else: ?>
             <p>No se encontró el usuario.</p>
         <?php endif; ?>
-        <a href="admin_usuarios.php">Volver</a>
+        <a href="admin_usuarios.php" class="back-link">Volver</a>
     </div>
 </body>
 </html>

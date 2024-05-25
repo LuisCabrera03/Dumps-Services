@@ -71,7 +71,6 @@ if (isset($_POST['edit_user'])) {
 $sql = "SELECT * FROM usuarios";
 $result = $conn->query($sql);
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -79,67 +78,129 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Usuarios</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: auto;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #0056b3;
             margin-bottom: 20px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
         th, td {
-            border: 1px solid black;
-            padding: 8px;
+            border: 1px solid #ddd;
+            padding: 12px;
             text-align: left;
         }
+
         th {
             background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 14px;
         }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
         .edit-btn, .delete-btn, .view-btn {
             text-decoration: none;
-            padding: 5px 10px;
+            padding: 8px 12px;
             border-radius: 5px;
-            color: white;
+            font-size: 14px;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+            display: inline-block;
+            width: 70px;
+            text-align: center;
         }
+
         .edit-btn {
             background-color: #4CAF50;
+            color: white;
         }
+
+        .edit-btn:hover {
+            background-color: #45a049;
+        }
+
         .delete-btn {
             background-color: #f44336;
+            color: white;
         }
+
+        .delete-btn:hover {
+            background-color: #da190b;
+        }
+
         .view-btn {
             background-color: #2196F3;
+            color: white;
+        }
+
+        .view-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #777;
         }
     </style>
 </head>
 <body>
-    <h2>Administración de Usuarios</h2>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Rol</th>
-            <th>Acciones</th>
-        </tr>
-        <?php
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $correo = isset($row['correo']) ? $row['correo'] : 'No definido';
-                echo "<tr>
-                        <td>{$row['id']}</td>
-                        <td>{$row['nombre']}</td>
-                        <td>{$correo}</td>
-                        <td>{$row['rol']}</td>
-                        <td>
-                            <a href='ver_usuario.php?id={$row['id']}' class='view-btn'>Ver</a>
-                            <a href='edit_usuario.php?id={$row['id']}' class='edit-btn'>Editar</a>
-                            <a href='admin_usuarios.php?delete={$row['id']}' class='delete-btn'>Eliminar</a>
-                        </td>
-                    </tr>";
-            }
-        } else {
-            echo "<tr><td colspan='5'>No se encontraron usuarios</td></tr>";
-        }
-        ?>
-    </table>
+    <div class="container">
+        <h2>Administración de Usuarios</h2>
+        <?php if ($result->num_rows > 0): ?>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td><?php echo $row['id']; ?></td>
+                            <td><?php echo $row['nombre']; ?></td>
+                            <td><?php echo isset($row['correo']) ? $row['correo'] : 'No definido'; ?></td>
+                            <td><?php echo $row['rol']; ?></td>
+                            <td>
+                                <a href="ver_usuario.php?id=<?php echo $row['id']; ?>" class="view-btn">Ver</a>
+                                <a href="edit_usuario.php?id=<?php echo $row['id']; ?>" class="edit-btn">Editar</a>
+                                <a href="admin_usuarios.php?delete=<?php echo $row['id']; ?>" class="delete-btn">Eliminar</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p class="no-data">No se encontraron usuarios.</p>
+        <?php endif; ?>
+    </div>
 </body>
 </html>
