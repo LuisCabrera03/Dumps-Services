@@ -75,7 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ruta_seguro_vehiculo = $ruta_destino;
     }
 
-    // Insertar los datos en la tabla de operarios
     $sql = "INSERT INTO operarios (id_usuario, marca_motocarro, modelo_motocarro, año_motocarro, placa_motocarro, foto_motocarro, direccion_domicilio, otros_detalles, certificado_antecedentes_judiciales, certificado_seguridad_social, licencia_conduccion, seguro_vehiculo";
     for ($i = 2; $i <= 10; $i++) {
         $sql .= ", foto_$i"; // Utilizar las columnas foto_2, foto_3, ..., foto_10
@@ -282,9 +281,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body>
-    <header>
-        <h1>Dump Services</h1>
-    </header>
     <div class="container">
         <h2>Registro de Operario</h2>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
@@ -367,6 +363,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
     </div>
-    <?php include 'footer.php';?>
 </body>
 </html>
