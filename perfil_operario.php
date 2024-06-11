@@ -87,15 +87,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sql .= ")";
 
     if (mysqli_query($conn, $sql)) {
-        echo "Operario registrado correctamente.";
+        // Redireccionar a la misma página para evitar reenvío del formulario
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
     } else {
         echo "Error al registrar operario: " . mysqli_error($conn);
     }
-
-    // Cerrar la conexión a la base de datos
-    mysqli_close($conn);
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -131,11 +131,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             min-height: 100vh;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         header, footer {
             width: 100%;
-            background-color: #021027;
+            background-color: var(--primary-color);
             color: #fff;
             text-align: center;
             padding: 10px 0;
