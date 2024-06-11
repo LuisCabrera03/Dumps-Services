@@ -33,21 +33,54 @@ if ($id_usuario) {
                     include 'header.php';
 
                     // Mostrar los datos del perfil de usuario
-                    echo "<h2>Perfil de Usuario</h2>";
-                    echo "<p>Nombre: " . $perfil['nombre'] . "</p>";
-                    echo "<p>Correo electrónico: " . $perfil['email'] . "</p>";
-                    echo "<p>Teléfono: " . $perfil['telefono'] . "</p>";
-
-                    // Mostrar los datos del perfil de operario si existen
-                    if (!empty($perfil['id_operario'])) {
-                        echo "<h2>Perfil de Operario</h2>";
-                        echo "<p>Marca del Motocarro: " . $perfil['marca_motocarro'] . "</p>";
-                        echo "<p>Modelo del Motocarro: " . $perfil['modelo_motocarro'] . "</p>";
-                        echo "<p>Año del Motocarro: " . $perfil['año_motocarro'] . "</p>";
-                        echo "<p>Placa del Motocarro: " . $perfil['placa_motocarro'] . "</p>";
+                    echo '<style>
+                    .profile-section {
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
                     }
-
-                    echo "<a href='solicitud_operario.php'>Tus Solicitudes</a>";
+                    .profile-section h2 {
+                        color: #00132B;
+                        border-bottom: 2px solid #00132B;
+                        padding-bottom: 10px;
+                        margin-bottom: 20px;
+                    }
+                    .profile-section p {
+                        font-size: 1em;
+                        margin: 10px 0;
+                        line-height: 1.6;
+                    }
+                    .profile-section a {
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #00132B;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                        transition: background-color 0.3s ease;
+                    }
+                    .profile-section a:hover {
+                        background-color: #000A1B;
+                    }
+                </style>';
+                
+                echo "<div class='profile-section'>";
+                echo "<h2>Perfil de Usuario</h2>";
+                echo "<p>Nombre: " . $perfil['nombre'] . "</p>";
+                echo "<p>Correo electrónico: " . $perfil['email'] . "</p>";
+                echo "<p>Teléfono: " . $perfil['telefono'] . "</p>";
+                
+                if (!empty($perfil['id_operario'])) {
+                    echo "<h2>Perfil de Operario</h2>";
+                    echo "<p>Marca del Motocarro: " . $perfil['marca_motocarro'] . "</p>";
+                    echo "<p>Modelo del Motocarro: " . $perfil['modelo_motocarro'] . "</p>";
+                    echo "<p>Año del Motocarro: " . $perfil['año_motocarro'] . "</p>";
+                    echo "<p>Placa del Motocarro: " . $perfil['placa_motocarro'] . "</p>";
+                }
+                
+                echo "<a href='solicitud_operario.php'>Tus Solicitudes</a>";
+                echo "</div>";
+                
 
                     // Puedes agregar más campos y estilos según sea necesario
                 } else {

@@ -44,11 +44,19 @@ if (isset($_POST['submit_nueva_calificacion'])) {
         // Actualizar la calificación existente
         $sql_actualizar_calificacion = "UPDATE calificaciones SET calificacion = $calificacion WHERE id_operario = $id_operario AND id_solicitud = $id_solicitud";
         if (mysqli_query($conn, $sql_actualizar_calificacion)) {
-            echo "Calificación actualizada correctamente.";
+            echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+            echo '<script>
+                    Swal.fire({
+                        title: "Calificación actualizada correctamente.",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    });
+                  </script>';
         } else {
             echo "Error al actualizar la calificación: " . mysqli_error($conn);
         }
-    } else {
+    }
+    else {
         // Insertar una nueva calificación
         $sql_insertar_calificacion = "INSERT INTO calificaciones (id_operario, id_solicitud, calificacion) VALUES ($id_operario, $id_solicitud, $calificacion)";
         if (mysqli_query($conn, $sql_insertar_calificacion)) {
@@ -66,7 +74,14 @@ if (isset($_POST['submit_nueva_calificacion'])) {
     // Actualizar el promedio de calificaciones en la tabla de operarios
     $sql_actualizar_promedio = "UPDATE operarios SET calificacion = $promedio_calificacion WHERE id_operario = $id_operario";
     if (mysqli_query($conn, $sql_actualizar_promedio)) {
-        echo "Promedio de calificación actualizado correctamente.";
+        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+        echo '<script>
+                Swal.fire({
+                    title: "Promedio de calificación actualizado correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                });
+              </script>';
     } else {
         echo "Error al actualizar el promedio de calificación: " . mysqli_error($conn);
     }
@@ -147,20 +162,34 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitante de Transporte - Lista de Solicitudes</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
         .solicitudes-list {
-            margin-top: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 0 20px;
         }
         .solicitud {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 20px;
             margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .solicitud:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
 <body>
-
+    <?php include 'footer.php'; ?>
 </body>
 </html>
-<?php
-    include 'footer.php';
-?>

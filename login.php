@@ -65,8 +65,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             // Las credenciales no son válidas, mostrar mensaje de error
-            $mensaje = "Usuario o contraseña incorrectos";
-        }
+            echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+            echo '<script>
+                    Swal.fire({
+                        title: "Error",
+                        text: "Usuario o contraseña incorrectos",
+                        icon: "error",
+                        confirmButtonText: "OK"
+                    });
+                  </script>';
+        }        
     } else {
         // Los datos de usuario y contraseña no se enviaron correctamente, mostrar mensaje de error
         $mensaje = "Por favor, ingresa usuario y contraseña";

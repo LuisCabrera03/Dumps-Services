@@ -74,7 +74,6 @@ if ($resultado_operarios) {
 // Cerrar la conexión a la base de datos
 mysqli_close($conn);
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -82,13 +81,6 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitante de Transporte - Lista de Operarios</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
         .container {
             max-width: 1200px;
             margin: 20px auto;
@@ -108,7 +100,6 @@ mysqli_close($conn);
             text-align: center;
             background-color: #fff;
             border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .operario img {
             max-width: 100%;
@@ -133,7 +124,6 @@ mysqli_close($conn);
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
         }
         .solicitud-button:hover {
             background-color: #0056b3;
@@ -143,54 +133,9 @@ mysqli_close($conn);
             margin-bottom: 20px;
             color: #0056b3;
         }
-        footer {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Lista de Operarios Disponibles</h2>
-        <div class="operarios-list">
-            <div class="operario">
-                <img src="https://via.placeholder.com/300" alt="Operario 1">
-                <h3>Nombre Operario 1</h3>
-                <p>Descripción del operario y sus servicios.</p>
-                <a href="#" class="solicitud-button">Solicitar Transporte</a>
-            </div>
-            <div class="operario">
-                <img src="https://via.placeholder.com/300" alt="Operario 2">
-                <h3>Nombre Operario 2</h3>
-                <p>Descripción del operario y sus servicios.</p>
-                <a href="#" class="solicitud-button">Solicitar Transporte</a>
-            </div>
-            <div class="operario">
-                <img src="https://via.placeholder.com/300" alt="Operario 3">
-                <h3>Nombre Operario 3</h3>
-                <p>Descripción del operario y sus servicios.</p>
-                <a href="#" class="solicitud-button">Solicitar Transporte</a>
-            </div>
-            <div class="operario">
-                <img src="https://via.placeholder.com/300" alt="Operario 4">
-                <h3>Nombre Operario 4</h3>
-                <p>Descripción del operario y sus servicios.</p>
-                <a href="#" class="solicitud-button">Solicitar Transporte</a>
-            </div>
-            <div class="operario">
-                <img src="https://via.placeholder.com/300" alt="Operario 5">
-                <h3>Nombre Operario 5</h3>
-                <p>Descripción del operario y sus servicios.</p>
-                <a href="#" class="solicitud-button">Solicitar Transporte</a>
-            </div>
-        </div>
-    </div>
-
-    <?php include 'footer.php'; ?>
+        <?php include 'footer.php'; ?>
 </body>
 </html>
