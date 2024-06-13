@@ -143,14 +143,12 @@
                 <ul>
                     <li><a href="#">Inicio</a></li>
                     <li><a href="#">Servicios</a></li>
-                    <li><a href="#">Contacto</a></li>
-                    <li><a href="#">Acerca de</a></li>
                 </ul>
             </div>
             <div>
                 <h3>Contacto</h3>
-                <p>Email: info@dumpservices.com</p>
-                <p>Teléfono: +1 (555) 123-4567</p>
+                <p>Gmail: soportedumpservices@gmail.com</p>
+                <p>Teléfono: +57 (320) 952 8762</p>
             </div>
         </div>
         <div class="social-icons">
