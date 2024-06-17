@@ -128,7 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" id="correo" name="correo" required>
             </div>
             <div class="form-group">
-                <button type="submit">Enviar Código</button>
+                <button type="submit">Solicitar Código</button>
             </div>
         </form>
     </div>
