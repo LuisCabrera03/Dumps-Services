@@ -35,9 +35,12 @@ $sql_operarios = "SELECT
     operarios.modelo_motocarro, 
     operarios.año_motocarro, 
     operarios.placa_motocarro, 
-    operarios.foto_motocarro 
+    operarios.foto_motocarro,
+    IFNULL(AVG(calificaciones.calificacion), 0) AS promedio_calificacion
 FROM operarios 
-JOIN usuarios ON operarios.id_usuario = usuarios.id";
+JOIN usuarios ON operarios.id_usuario = usuarios.id
+LEFT JOIN calificaciones ON operarios.id_operario = calificaciones.id_operario
+GROUP BY operarios.id_operario, usuarios.nombre, usuarios.apellidos, operarios.marca_motocarro, operarios.modelo_motocarro, operarios.año_motocarro, operarios.placa_motocarro, operarios.foto_motocarro";
 
 $resultado_operarios = mysqli_query($conn, $sql_operarios);
 
@@ -51,14 +54,15 @@ if ($resultado_operarios) {
         while ($operario = mysqli_fetch_assoc($resultado_operarios)) {
             echo "<div class='operario'>";
             echo "<a href='solicitar_operario.php?id_operario=" . $operario['id_operario'] . "'>";
-            echo "<img src='" . $operario['foto_motocarro'] . "' alt='Foto del Motocarro' style='width:200px;height:200px;'><br>";
+            echo "<img src='" . $operario['foto_motocarro'] . "' alt='Foto del Motocarro' ><br>";
             echo "<p><strong>Nombre:</strong> " . $operario['nombre'] . " " . $operario['apellidos'] . "</p>";
             echo "<p><strong>Marca del Motocarro:</strong> " . $operario['marca_motocarro'] . "</p>";
             echo "<p><strong>Modelo del Motocarro:</strong> " . $operario['modelo_motocarro'] . "</p>";
             echo "<p><strong>Año del Motocarro:</strong> " . $operario['año_motocarro'] . "</p>";
             echo "<p><strong>Placa del Motocarro:</strong> " . $operario['placa_motocarro'] . "</p>";
+            echo "<p><strong>Calificación:</strong> " . number_format($operario['promedio_calificacion'], 1) . " / 5</p>";
             echo "</a>";
-            echo "</div><hr>";
+            echo "</div>";
         }
         
         echo "</div>";
@@ -81,61 +85,84 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitante de Transporte - Lista de Operarios</title>
     <style>
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
         }
-        .operarios-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
-        .operario {
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin: 10px;
-            width: calc(33.333% - 20px);
-            box-sizing: border-box;
+
+        h2 {
             text-align: center;
-            background-color: #fff;
-            border-radius: 5px;
+            color: #333;
         }
-        .operario img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        @media (max-width: 768px) {
-            .operario {
-                width: calc(50% - 20px);
-            }
-        }
-        @media (max-width: 480px) {
-            .operario {
-                width: calc(100% - 20px);
-            }
-        }
+
         .solicitud-button {
-            margin-top: 10px;
-            display: inline-block;
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: #fff;
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 20px;
+            text-align: center;
+            background-color: #007BFF;
+            color: white;
             text-decoration: none;
             border-radius: 5px;
+            transition: background-color 0.3s;
         }
+
         .solicitud-button:hover {
             background-color: #0056b3;
         }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #0056b3;
+
+        .operarios-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .operario {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 300px;
+            transition: transform 0.3s;
+        }
+
+        .operario:hover {
+            transform: translateY(-10px);
+        }
+
+        .operario a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .operario img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .operario p {
+            margin: 10px;
+            color: #555;
+        }
+
+        .operario p strong {
+            color: #333;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-        <?php include 'footer.php'; ?>
+    <?php include 'footer.php'; ?>
 </body>
 </html>

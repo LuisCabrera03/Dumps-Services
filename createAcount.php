@@ -1,7 +1,7 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
-
+include 'header.php';
 // Variables para almacenar mensajes de éxito o error
 $mensaje = '';
 $errores = [];
@@ -116,12 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh; /* Altura completa de la ventana */
             margin: 0;
-            padding: 20px;
         }
 
         .container {
@@ -129,8 +124,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding: 20px; /* Reducir padding para hacer el contenedor más pequeño */
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 400px; /* Reducir tamaño máximo del contenedor */
+            width: 50%;
+            margin: 20px auto;
             animation: slideIn var(--transition-speed) ease-out;
             border-left: 5px solid var(--primary-color);
             border-right: 5px solid var(--secondary-color);
@@ -232,6 +227,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 600px) {
+           .container {
+                width: 100%;
+            }
+        }
+
+        @media screen and (max-width: 400px) {
+           .form-group {
+                margin-bottom: 10px; /* Reducir margen inferior */
             }
         }
     </style>
@@ -336,6 +344,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }, 3000); 
         });
     </script>
+
     <?php endif; ?>
 </body>
 </html>
+<?php
+    include 'footer.php'; 
+    ?>

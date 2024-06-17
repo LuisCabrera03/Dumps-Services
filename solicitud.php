@@ -8,7 +8,16 @@ if (isset($_POST['cancelar'])) {
     $id_solicitud = $_POST['id_solicitud'];
     $sql_cancelar = "UPDATE solicitudes SET estado = 'Cancelado' WHERE id = $id_solicitud";
     if (mysqli_query($conn, $sql_cancelar)) {
-        echo "Solicitud cancelada correctamente.";
+        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+        echo '<script>
+                Swal.fire({
+                    title: "Solicitud cancelada correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(function() {
+                    window.location.reload();
+                });
+              </script>';
     } else {
         echo "Error al cancelar la solicitud: " . mysqli_error($conn);
     }
@@ -19,7 +28,16 @@ if (isset($_POST['entregado'])) {
     $id_solicitud = $_POST['id_solicitud'];
     $sql_entregado = "UPDATE solicitudes SET estado = 'Entregado' WHERE id = $id_solicitud";
     if (mysqli_query($conn, $sql_entregado)) {
-        echo "Solicitud marcada como entregada correctamente.";
+        echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+        echo '<script>
+                Swal.fire({
+                    title: "Solicitud marcada como entregada correctamente.",
+                    icon: "success",
+                    confirmButtonText: "OK"
+                }).then(function() {
+                    window.location.reload();
+                });
+              </script>';
     } else {
         echo "Error al marcar la solicitud como entregada: " . mysqli_error($conn);
     }
@@ -50,17 +68,27 @@ if (isset($_POST['submit_nueva_calificacion'])) {
                         title: "Calificación actualizada correctamente.",
                         icon: "success",
                         confirmButtonText: "OK"
+                    }).then(function() {
+                        window.location.reload();
                     });
                   </script>';
         } else {
             echo "Error al actualizar la calificación: " . mysqli_error($conn);
         }
-    }
-    else {
+    } else {
         // Insertar una nueva calificación
         $sql_insertar_calificacion = "INSERT INTO calificaciones (id_operario, id_solicitud, calificacion) VALUES ($id_operario, $id_solicitud, $calificacion)";
         if (mysqli_query($conn, $sql_insertar_calificacion)) {
-            echo "¡Gracias por tu calificación!";
+            echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+            echo '<script>
+                    Swal.fire({
+                        title: "¡Gracias por tu calificación!",
+                        icon: "success",
+                        confirmButtonText: "OK"
+                    }).then(function() {
+                        window.location.reload();
+                    });
+                  </script>';
         } else {
             echo "Error al guardar la calificación: " . mysqli_error($conn);
         }
@@ -80,6 +108,8 @@ if (isset($_POST['submit_nueva_calificacion'])) {
                     title: "Promedio de calificación actualizado correctamente.",
                     icon: "success",
                     confirmButtonText: "OK"
+                }).then(function() {
+                    window.location.reload();
                 });
               </script>';
     } else {
@@ -102,7 +132,8 @@ if ($id_solicitante) {
             
             // Recorrer y mostrar los datos de cada solicitud
             while ($solicitud = mysqli_fetch_assoc($resultado_solicitudes)) {
-                echo "<div class='solicitud'>";
+                $estado_clase = strtolower($solicitud['estado']); // Convertir el estado a minúsculas para la clase CSS
+                echo "<div class='solicitud $estado_clase'>";
                 echo "<p><strong>Dirección de acarreo:</strong> " . $solicitud['direccion_acarreo'] . "</p>";
                 echo "<p><strong>Detalles de acarreo:</strong> " . $solicitud['detalles_acarreo'] . "</p>";
                 echo "<p><strong>Estado:</strong> " . $solicitud['estado'] . "</p>";
@@ -120,7 +151,7 @@ if ($id_solicitante) {
                     $id_operario = $solicitud['id_operario'];
                     $sql_calificacion_actual = "SELECT calificacion FROM calificaciones WHERE id_operario = $id_operario AND id_solicitud = " . $solicitud['id'];
                     $resultado_calificacion_actual = mysqli_query($conn, $sql_calificacion_actual);
-                    $calificacion_actual = mysqli_fetch_assoc($resultado_calificacion_actual)['calificacion'];
+                    $calificacion_actual = mysqli_fetch_assoc($resultado_calificacion_actual)['calificacion'] ?? null;
 
                     echo "<div>";
                     echo "<label for='nueva_calificacion'>Calificación (1-5):</label>";
@@ -164,28 +195,66 @@ mysqli_close($conn);
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            margin: 0;
-            padding: 0;
         }
         .solicitudes-list {
-            margin: 20px auto;
-            max-width: 800px;
-            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         .solicitud {
             border: 1px solid #ddd;
             padding: 20px;
-            margin-bottom: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
+            border-radius: 5px;
+            background-color: #f9f9f9;
         }
-        .solicitud:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        .solicitud.pendiente {
+            border-color: #ffc107;
+            background-color: #fff3cd;
+        }
+        .solicitud.aceptado {
+            border-color: #007bff;
+            background-color: #cce5ff;
+        }
+        .solicitud.entregado {
+            border-color: #28a745;
+            background-color: #d4edda;
+        }
+        .solicitud.cancelado {
+            border-color: #dc3545;
+            background-color: #f8d7da;
+        }
+        .solicitud p {
+            margin: 0 0 10px;
+        }
+        .solicitud form {
+            margin-bottom: 10px;
+        }
+        .solicitud label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .solicitud input[type="radio"] {
+            margin-right: 5px;
+        }
+        .solicitud input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .solicitud input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .solicitud a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .solicitud a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>

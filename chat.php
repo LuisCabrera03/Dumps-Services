@@ -29,13 +29,9 @@ $id_solicitud = isset($_GET['id_solicitud']) ? $_GET['id_solicitud'] : null;
             border: 1px solid #ccc;
             padding: 10px;
             margin-bottom: 20px;
-            height: 400px;
-            width: 80%;
-            max-width: 600px;
-            overflow-y: scroll;
+            width: 100%;
             background-color: #fff;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
         }
         .mensaje {
             padding: 10px;

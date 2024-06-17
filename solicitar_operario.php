@@ -1,12 +1,13 @@
 <?php
 // Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
+include 'header.php';
 
 // Obtener el ID del operario desde la URL
 $id_operario = $_GET['id_operario'];
 
 // Verificar si la cookie del usuario está configurada
-if(isset($_COOKIE['usuario_id'])) {
+if (isset($_COOKIE['usuario_id'])) {
     // Obtener el ID del solicitante de transporte de la cookie
     $id_solicitante = $_COOKIE['usuario_id'];
 } else {
@@ -26,7 +27,17 @@ $sql_operario = "SELECT
     operarios.modelo_motocarro, 
     operarios.año_motocarro, 
     operarios.placa_motocarro, 
-    operarios.foto_motocarro 
+    operarios.foto_motocarro, 
+    operarios.foto_2,
+    operarios.foto_3,
+    operarios.foto_4,
+    operarios.foto_5,
+    operarios.foto_6,
+    operarios.foto_7,
+    operarios.foto_8,
+    operarios.foto_9,
+    operarios.foto_10,
+    operarios.otros_detalles
 FROM operarios 
 JOIN usuarios ON operarios.id_usuario = usuarios.id 
 WHERE operarios.id_operario = $id_operario";
@@ -43,30 +54,164 @@ if ($resultado_operario) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitud de Acarreo</title>
+    <style>
+        .container {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+        .details, .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            width: 80%;
+            max-width: 800px;
+        }
+        .details p, .form-container label {
+            margin: 10px 0;
+            color: #555;
+        }
+        .details p strong {
+            color: #333;
+        }
+        .details img {
+            display: block;
+            margin: 0 auto 10px auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container input[type="text"], .form-container textarea {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .form-container button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+        .additional-photos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .additional-photos img {
+            max-width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .details-table th, .details-table td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+        }
+        .details-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-<h2>Detalles del Operario</h2>
-<p><strong>Nombre:</strong> <?php echo $operario['nombre'] . " " . $operario['apellidos']; ?></p>
-<p><strong>Correo electrónico:</strong> <?php echo $operario['correo']; ?></p>
-<p><strong>Teléfono:</strong> <?php echo $operario['telefono']; ?></p>
-<p><strong>Dirección:</strong> <?php echo $operario['direccion_domicilio']; ?></p>
-<p><strong>Marca del Motocarro:</strong> <?php echo $operario['marca_motocarro']; ?></p>
-<p><strong>Modelo del Motocarro:</strong> <?php echo $operario['modelo_motocarro']; ?></p>
-<p><strong>Año del Motocarro:</strong> <?php echo $operario['año_motocarro']; ?></p>
-<p><strong>Placa del Motocarro:</strong> <?php echo $operario['placa_motocarro']; ?></p>
-<img src="<?php echo $operario['foto_motocarro']; ?>" alt="Foto del Motocarro" style="width:200px;height:200px;"><br><br>
+<div class="container">
+    <div class="details">
+        <h2>Detalles del Operario</h2>
+        <table class="details-table">
+            <tr>
+                <th>Nombre:</th>
+                <td><?php echo $operario['nombre'] . " " . $operario['apellidos']; ?></td>
+            </tr>
+            <tr>
+                <th>Correo electrónico:</th>
+                <td><?php echo $operario['correo']; ?></td>
+            </tr>
+            <tr>
+                <th>Teléfono:</th>
+                <td><?php echo $operario['telefono']; ?></td>
+            </tr>
+            <tr>
+                <th>Dirección:</th>
+                <td><?php echo $operario['direccion_domicilio']; ?></td>
+            </tr>
+            <tr>
+                <th>Marca del Motocarro:</th>
+                <td><?php echo $operario['marca_motocarro']; ?></td>
+            </tr>
+            <tr>
+                <th>Modelo del Motocarro:</th>
+                <td><?php echo $operario['modelo_motocarro']; ?></td>
+            </tr>
+            <tr>
+                <th>Año del Motocarro:</th>
+                <td><?php echo $operario['año_motocarro']; ?></td>
+            </tr>
+            <tr>
+                <th>Placa del Motocarro:</th>
+                <td><?php echo $operario['placa_motocarro']; ?></td>
+            </tr>
+            <tr>
+                <th>Otros detalles:</th>
+                <td><?php echo nl2br($operario['otros_detalles']); ?></td>
+            </tr>
+        </table>
+        <img src="<?php echo $operario['foto_motocarro']; ?>" alt="Foto del Motocarro">
 
-<h2>Solicitud de Acarreo</h2>
-<form action="procesar_solicitud.php" method="post">
-    <input type="hidden" name="id_operario" value="<?php echo $id_operario; ?>">
-    <!-- Incluir el ID del solicitante de transporte en el formulario -->
-    <input type="hidden" name="id_solicitante" value="<?php echo $id_solicitante; ?>">
-    <label for="direccion_acarreo">Dirección del Acarreo:</label>
-    <input type="text" id="direccion_acarreo" name="direccion_acarreo" required><br><br>
-    <label for="detalles_acarreo">Detalles del Acarreo:</label>
-    <textarea id="detalles_acarreo" name="detalles_acarreo" required></textarea><br><br>
-    <button type="submit">Solicitar Acarreo</button>
-</form>
+        <?php if ($operario['foto_2'] || $operario['foto_3'] || $operario['foto_4'] || $operario['foto_5'] || $operario['foto_6'] || $operario['foto_7'] || $operario['foto_8'] || $operario['foto_9'] || $operario['foto_10']) { ?>
+        <h3>Fotos Adicionales</h3>
+        <div class="additional-photos">
+            <?php
+            for ($i = 2; $i <= 10; $i++) {
+                $foto = $operario['foto_' . $i];
+                if ($foto) {
+                    echo "<img src='" . $foto . "' alt='Foto adicional $i'>";
+                }
+            }
+            ?>
+        </div>
+        <?php } ?>
+    </div>
+
+    <div class="form-container">
+        <h2>Solicitud de Acarreo</h2>
+        <form action="procesar_solicitud.php" method="post">
+            <input type="hidden" name="id_operario" value="<?php echo $id_operario; ?>">
+            <input type="hidden" name="id_solicitante" value="<?php echo $id_solicitante; ?>">
+            <label for="direccion_acarreo">Dirección del Acarreo:</label>
+            <input type="text" id="direccion_acarreo" name="direccion_acarreo" required>
+            <label for="detalles_acarreo">Detalles del Acarreo:</label>
+            <textarea id="detalles_acarreo" name="detalles_acarreo" required></textarea>
+            <button type="submit">Solicitar Acarreo</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
 <?php

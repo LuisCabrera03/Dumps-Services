@@ -7,7 +7,7 @@ $id_usuario = isset($_COOKIE['usuario_id']) ? $_COOKIE['usuario_id'] : null;
 if ($id_solicitud && $mensaje && $id_usuario) {
 
     $sql_insertar = "INSERT INTO mensajes (id_solicitud, id_usuario, mensaje, fecha_envio) 
-                     VALUES ('$id_solicitud', '$id_usuario', '$mensaje', NOW())";
+                    VALUES ('$id_solicitud', '$id_usuario', '$mensaje', NOW())";
 
     if (mysqli_query($conn, $sql_insertar)) {
         header("Location: chat.php?id_solicitud=$id_solicitud");

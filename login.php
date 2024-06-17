@@ -252,8 +252,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 <button type="submit" class="login-button">Ingresar</button>        
                 <a href="createAcount.php" class="login-link">Crea tu cuenta</a>
+                <a href="recuperar_contrasena.php" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        </form>
             </form>
         </div>
+        
         <img src="fonts/imagenes/logo.png" alt="Descripción de la imagen" class="side-image">
     </div>
 </body>
