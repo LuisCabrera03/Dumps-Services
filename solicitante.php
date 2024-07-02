@@ -24,7 +24,6 @@ if ($id_solicitante) {
 }
 
 // Botón para ver solicitudes
-echo "<a href='solicitud.php' class='solicitud-button'>Ver Mis Solicitudes</a>";
 
 // Consulta para obtener la información relevante de todos los operarios
 $sql_operarios = "SELECT 
@@ -48,6 +47,8 @@ if ($resultado_operarios) {
     // Verificar si hay datos
     if (mysqli_num_rows($resultado_operarios) > 0) {
         echo "<h2>Lista de Operarios</h2>";
+        echo "<a href='solicitud.php' class='solicitud-button'>Ver Mis Solicitudes</a>";
+
         echo "<div class='operarios-list'>";
         
         // Recorrer y mostrar los datos de cada operario
@@ -84,82 +85,10 @@ mysqli_close($conn);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitante de Transporte - Lista de Operarios</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='css/solicitante.css'>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        .solicitud-button {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            padding: 10px 20px;
-            text-align: center;
-            background-color: #007BFF;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .solicitud-button:hover {
-            background-color: #0056b3;
-        }
-
-        .operarios-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .operario {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            width: 300px;
-            transition: transform 0.3s;
-        }
-
-        .operario:hover {
-            transform: translateY(-10px);
-        }
-
-        .operario a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .operario img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .operario p {
-            margin: 10px;
-            color: #555;
-        }
-
-        .operario p strong {
-            color: #333;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #eee;
-            margin: 0;
-        }
+        
     </style>
 </head>
 <body>

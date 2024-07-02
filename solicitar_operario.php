@@ -53,92 +53,10 @@ if ($resultado_operario) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' media='screen' href='css/solicitante.css'>
+
     <title>Solicitud de Acarreo</title>
-    <style>
-        .container {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container h2 {
-            color: #333;
-            margin-top: 20px;
-        }
-        .details, .form-container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin: 20px;
-            width: 80%;
-            max-width: 800px;
-        }
-        .details p, .form-container label {
-            margin: 10px 0;
-            color: #555;
-        }
-        .details p strong {
-            color: #333;
-        }
-        .details img {
-            display: block;
-            margin: 0 auto 10px auto;
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-        .form-container form {
-            display: flex;
-            flex-direction: column;
-        }
-        .form-container input[type="text"], .form-container textarea {
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .form-container button {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .form-container button:hover {
-            background-color: #0056b3;
-        }
-        .additional-photos {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
-        .additional-photos img {
-            max-width: 150px;
-            height: auto;
-            border-radius: 8px;
-        }
-        .details-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .details-table th, .details-table td {
-            text-align: left;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-        }
-        .details-table th {
-            background-color: #f2f2f2;
-        }
-    </style>
+
 </head>
 <body>
 <div class="container">

@@ -1,13 +1,26 @@
 <?php
-// Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
 include 'header.php';
+
+// Verificar si una sesión ya está activa antes de llamar a session_start()
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Función para ejecutar una consulta segura
+function ejecutarConsultaSegura($conn, $query, $params, $types) {
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, $types, ...$params);
+    mysqli_stmt_execute($stmt);
+    return $stmt;
+}
 
 // Función para cancelar la solicitud
 if (isset($_POST['cancelar'])) {
     $id_solicitud = $_POST['id_solicitud'];
-    $sql_cancelar = "UPDATE solicitudes SET estado = 'Cancelado' WHERE id = $id_solicitud";
-    if (mysqli_query($conn, $sql_cancelar)) {
+    $query = "UPDATE solicitudes SET estado = 'Cancelado' WHERE id = ?";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$id_solicitud], 'i');
+    if ($stmt) {
         echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
         echo '<script>
                 Swal.fire({
@@ -15,7 +28,7 @@ if (isset($_POST['cancelar'])) {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(function() {
-                    window.location.reload();
+                    window.location.href = window.location.href;
                 });
               </script>';
     } else {
@@ -26,8 +39,9 @@ if (isset($_POST['cancelar'])) {
 // Función para marcar como entregado
 if (isset($_POST['entregado'])) {
     $id_solicitud = $_POST['id_solicitud'];
-    $sql_entregado = "UPDATE solicitudes SET estado = 'Entregado' WHERE id = $id_solicitud";
-    if (mysqli_query($conn, $sql_entregado)) {
+    $query = "UPDATE solicitudes SET estado = 'Entregado' WHERE id = ?";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$id_solicitud], 'i');
+    if ($stmt) {
         echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
         echo '<script>
                 Swal.fire({
@@ -35,7 +49,7 @@ if (isset($_POST['entregado'])) {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(function() {
-                    window.location.reload();
+                    window.location.href = window.location.href;
                 });
               </script>';
     } else {
@@ -49,19 +63,22 @@ if (isset($_POST['submit_nueva_calificacion'])) {
     $calificacion = $_POST['nueva_calificacion'];
 
     // Obtener el ID del operario asociado a la solicitud
-    $sql_id_operario = "SELECT id_operario FROM solicitudes WHERE id = $id_solicitud";
-    $resultado_id_operario = mysqli_query($conn, $sql_id_operario);
-    $row = mysqli_fetch_assoc($resultado_id_operario);
+    $query = "SELECT id_operario FROM solicitudes WHERE id = ?";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$id_solicitud], 'i');
+    $resultado = mysqli_stmt_get_result($stmt);
+    $row = mysqli_fetch_assoc($resultado);
     $id_operario = $row['id_operario'];
 
     // Comprobar si ya existe una calificación para esta solicitud y operario
-    $sql_check_calificacion = "SELECT * FROM calificaciones WHERE id_operario = $id_operario AND id_solicitud = $id_solicitud";
-    $resultado_check_calificacion = mysqli_query($conn, $sql_check_calificacion);
+    $query = "SELECT * FROM calificaciones WHERE id_operario = ? AND id_solicitud = ?";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$id_operario, $id_solicitud], 'ii');
+    $resultado = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($resultado_check_calificacion) > 0) {
+    if (mysqli_num_rows($resultado) > 0) {
         // Actualizar la calificación existente
-        $sql_actualizar_calificacion = "UPDATE calificaciones SET calificacion = $calificacion WHERE id_operario = $id_operario AND id_solicitud = $id_solicitud";
-        if (mysqli_query($conn, $sql_actualizar_calificacion)) {
+        $query = "UPDATE calificaciones SET calificacion = ? WHERE id_operario = ? AND id_solicitud = ?";
+        $stmt = ejecutarConsultaSegura($conn, $query, [$calificacion, $id_operario, $id_solicitud], 'iii');
+        if ($stmt) {
             echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
             echo '<script>
                     Swal.fire({
@@ -69,7 +86,7 @@ if (isset($_POST['submit_nueva_calificacion'])) {
                         icon: "success",
                         confirmButtonText: "OK"
                     }).then(function() {
-                        window.location.reload();
+                        window.location.href = window.location.href;
                     });
                   </script>';
         } else {
@@ -77,8 +94,9 @@ if (isset($_POST['submit_nueva_calificacion'])) {
         }
     } else {
         // Insertar una nueva calificación
-        $sql_insertar_calificacion = "INSERT INTO calificaciones (id_operario, id_solicitud, calificacion) VALUES ($id_operario, $id_solicitud, $calificacion)";
-        if (mysqli_query($conn, $sql_insertar_calificacion)) {
+        $query = "INSERT INTO calificaciones (id_operario, id_solicitud, calificacion) VALUES (?, ?, ?)";
+        $stmt = ejecutarConsultaSegura($conn, $query, [$id_operario, $id_solicitud, $calificacion], 'iii');
+        if ($stmt) {
             echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
             echo '<script>
                     Swal.fire({
@@ -86,7 +104,7 @@ if (isset($_POST['submit_nueva_calificacion'])) {
                         icon: "success",
                         confirmButtonText: "OK"
                     }).then(function() {
-                        window.location.reload();
+                        window.location.href = window.location.href;
                     });
                   </script>';
         } else {
@@ -95,13 +113,15 @@ if (isset($_POST['submit_nueva_calificacion'])) {
     }
 
     // Obtener el nuevo promedio de calificaciones para el operario
-    $sql_calcular_promedio = "SELECT AVG(calificacion) as promedio_calificacion FROM calificaciones WHERE id_operario = $id_operario";
-    $resultado_promedio = mysqli_query($conn, $sql_calcular_promedio);
-    $promedio_calificacion = mysqli_fetch_assoc($resultado_promedio)['promedio_calificacion'];
+    $query = "SELECT AVG(calificacion) as promedio_calificacion FROM calificaciones WHERE id_operario = ?";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$id_operario], 'i');
+    $resultado = mysqli_stmt_get_result($stmt);
+    $promedio_calificacion = mysqli_fetch_assoc($resultado)['promedio_calificacion'];
 
     // Actualizar el promedio de calificaciones en la tabla de operarios
-    $sql_actualizar_promedio = "UPDATE operarios SET calificacion = $promedio_calificacion WHERE id_operario = $id_operario";
-    if (mysqli_query($conn, $sql_actualizar_promedio)) {
+    $query = "UPDATE operarios SET calificacion = ? WHERE id_operario = ?";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$promedio_calificacion, $id_operario], 'di');
+    if ($stmt) {
         echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
         echo '<script>
                 Swal.fire({
@@ -109,9 +129,9 @@ if (isset($_POST['submit_nueva_calificacion'])) {
                     icon: "success",
                     confirmButtonText: "OK"
                 }).then(function() {
-                    window.location.reload();
+                    window.location.href = window.location.href;
                 });
-              </script>';
+            </script>';
     } else {
         echo "Error al actualizar el promedio de calificación: " . mysqli_error($conn);
     }
@@ -121,8 +141,10 @@ if (isset($_POST['submit_nueva_calificacion'])) {
 $id_solicitante = isset($_SESSION['usuario_id']) ? $_SESSION['usuario_id'] : (isset($_COOKIE['usuario_id']) ? $_COOKIE['usuario_id'] : null);
 
 if ($id_solicitante) {
-    $sql_solicitudes = "SELECT * FROM solicitudes WHERE id_solicitante = $id_solicitante";
-    $resultado_solicitudes = mysqli_query($conn, $sql_solicitudes);
+    // Consulta modificada para ordenar las solicitudes por estado
+    $query = "SELECT * FROM solicitudes WHERE id_solicitante = ? ORDER BY FIELD(estado, 'Espera', 'Aceptado', 'Entregado', 'Cancelado')";
+    $stmt = ejecutarConsultaSegura($conn, $query, [$id_solicitante], 'i');
+    $resultado_solicitudes = mysqli_stmt_get_result($stmt);
 
     if ($resultado_solicitudes) {
         // Verificar si hay datos
@@ -134,37 +156,42 @@ if ($id_solicitante) {
             while ($solicitud = mysqli_fetch_assoc($resultado_solicitudes)) {
                 $estado_clase = strtolower($solicitud['estado']); // Convertir el estado a minúsculas para la clase CSS
                 echo "<div class='solicitud $estado_clase'>";
-                echo "<p><strong>Dirección de acarreo:</strong> " . $solicitud['direccion_acarreo'] . "</p>";
-                echo "<p><strong>Detalles de acarreo:</strong> " . $solicitud['detalles_acarreo'] . "</p>";
-                echo "<p><strong>Estado:</strong> " . $solicitud['estado'] . "</p>";
+                echo "<p><strong><i class='fas fa-map-marker-alt'></i> Dirección de acarreo:</strong> " . $solicitud['direccion_acarreo'] . "</p>";
+                echo "<p><strong><i class='fas fa-info-circle'></i> Detalles de acarreo:</strong> " . $solicitud['detalles_acarreo'] . "</p>";
+                echo "<p><strong><i class='fas fa-flag'></i> Estado:</strong> " . $solicitud['estado'] . "</p>";
                 echo "<form action='' method='post'>";
                 echo "<input type='hidden' name='id_solicitud' value='" . $solicitud['id'] . "'>";
                 if ($solicitud['estado'] == 'Espera') {
-                    echo "<input type='submit' name='cancelar' value='Cancelar'>";
+                    echo "<button type='submit' name='cancelar' class='btn cancelar'><i class='fas fa-times-circle'></i> Cancelar</button>";
                 } elseif ($solicitud['estado'] == 'Aceptado') {
-                    echo "<input type='submit' name='entregado' value='Pedido Recibido'>";
+                    echo "<button type='submit' name='entregado' class='btn entregado'><i class='fas fa-check-circle'></i> Pedido Recibido</button>";
                 }
 
                 // Aquí se mostrará el formulario de calificación si el estado es "Entregado"
                 if ($solicitud['estado'] == 'Entregado') {
                     // Obtener la calificación actual del operario para la solicitud específica
                     $id_operario = $solicitud['id_operario'];
-                    $sql_calificacion_actual = "SELECT calificacion FROM calificaciones WHERE id_operario = $id_operario AND id_solicitud = " . $solicitud['id'];
-                    $resultado_calificacion_actual = mysqli_query($conn, $sql_calificacion_actual);
-                    $calificacion_actual = mysqli_fetch_assoc($resultado_calificacion_actual)['calificacion'] ?? null;
+                    $query = "SELECT calificacion FROM calificaciones WHERE id_operario = ? AND id_solicitud = ?";
+                    $stmt = ejecutarConsultaSegura($conn, $query, [$id_operario, $solicitud['id']], 'ii');
+                    $resultado = mysqli_stmt_get_result($stmt);
+                    $calificacion_actual = mysqli_fetch_assoc($resultado)['calificacion'] ?? null;
 
                     echo "<div>";
-                    echo "<label for='nueva_calificacion'>Calificación (1-5):</label>";
+                    echo "<label for='nueva_calificacion'><i class='fas fa-star'></i> Calificación (1-5):</label>";
                     for ($i = 1; $i <= 5; $i++) {
                         $checked = ($calificacion_actual == $i) ? "checked" : "";
                         echo "<input type='radio' name='nueva_calificacion' value='$i' $checked>$i";
                     }
                     echo "</div>";
-                    echo "<input type='submit' name='submit_nueva_calificacion' value='Calificar'>";
+                    echo "<button type='submit' name='submit_nueva_calificacion' class='btn calificar'><i class='fas fa-paper-plane'></i> Calificar</button>";
                 }
 
                 echo "</form>";
-                echo "<a href='chat.php?id_solicitud=" . $solicitud['id'] . "&id_operario=" . $solicitud['id_operario'] . "'>Chatear con el operador</a>";
+
+                // Mostrar el enlace del chat solo si la solicitud no está en espera
+                if ($solicitud['estado'] != 'Espera') {
+                    echo "<a href='chat.php?id_solicitud=" . $solicitud['id'] . "&id_operario=" . $solicitud['id_operario'] . "' class='btn chatear'><i class='fas fa-comments'></i> Chatear con el operador</a>";
+                }
                 echo "</div><hr>";
             }
             
@@ -191,72 +218,8 @@ mysqli_close($conn);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' type='text/css' media='screen' href='css/solicitante.css'>
     <title>Solicitante de Transporte - Lista de Solicitudes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .solicitudes-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .solicitud {
-            border: 1px solid #ddd;
-            padding: 20px;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .solicitud.pendiente {
-            border-color: #ffc107;
-            background-color: #fff3cd;
-        }
-        .solicitud.aceptado {
-            border-color: #007bff;
-            background-color: #cce5ff;
-        }
-        .solicitud.entregado {
-            border-color: #28a745;
-            background-color: #d4edda;
-        }
-        .solicitud.cancelado {
-            border-color: #dc3545;
-            background-color: #f8d7da;
-        }
-        .solicitud p {
-            margin: 0 0 10px;
-        }
-        .solicitud form {
-            margin-bottom: 10px;
-        }
-        .solicitud label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .solicitud input[type="radio"] {
-            margin-right: 5px;
-        }
-        .solicitud input[type="submit"] {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .solicitud input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-        .solicitud a {
-            display: inline-block;
-            margin-top: 10px;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .solicitud a:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 <body>
     <?php include 'footer.php'; ?>
