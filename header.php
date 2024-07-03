@@ -33,6 +33,9 @@
         }
 
         /* Estilos del encabezado */
+        a{
+            text-decoration: none;
+        }
         .main-header {
             display: flex;
             justify-content: space-between;
@@ -111,7 +114,8 @@
 <body>
     <header class="main-header">
         <div class="logo">
-            <h1>Dump Services</h1>
+            <a href="home.php"><h1>Dump Services</h1>
+            </a>
         </div>
         <div class="auth-buttons">
             <?php

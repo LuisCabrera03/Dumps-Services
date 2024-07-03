@@ -53,41 +53,61 @@ $result7 = $conn->query($sql7);
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-family: 'Roboto', sans-serif;
         }
+
         .navbar-custom {
             background-color: #343a40;
         }
-        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link {
             color: #ffffff;
         }
+
         .container {
             margin-top: 30px;
         }
+
         .card {
             border: none;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            transition: transform 0.3s ease;
         }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
         .card-title {
             color: #495057;
         }
+
         .chart-container {
             padding: 20px;
         }
+
         .table-container {
             margin-top: 20px;
         }
+
         .btn-custom {
             background-color: #17a2b8;
             color: white;
         }
+
         .btn-custom:hover {
             background-color: #138496;
         }
+
         .navbar-nav .nav-item:not(:last-child) {
             margin-right: 15px;
         }
+
         .navbar-nav .nav-link {
             font-size: 1.1rem;
             padding: 10px 15px;

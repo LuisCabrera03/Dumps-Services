@@ -2,6 +2,7 @@
 // Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
 include 'header.php';
+
 // Variables para almacenar mensajes de éxito o error
 $mensaje = '';
 $errores = [];
@@ -119,19 +120,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0;
         }
 
-        .container {
+        .container-create {
             background: var(--input-background);
             padding: 20px; /* Reducir padding para hacer el contenedor más pequeño */
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
             width: 50%;
+            max-height: 600px;
             margin: 20px auto;
             animation: slideIn var(--transition-speed) ease-out;
             border-left: 5px solid var(--primary-color);
             border-right: 5px solid var(--secondary-color);
         }
 
-        h2 {
+        .container-create h2 {
             text-align: center;
             margin-bottom: 15px; /* Reducir margen inferior */
             color: var(--primary-color);
@@ -140,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             padding-bottom: 10px;
         }
 
-        h2:after {
+        .container-create h2:after {
             content: "";
             width: 50px;
             height: 3px;
@@ -151,19 +153,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             transform: translateX(-50%);
         }
 
-        .form-group {
+        .container-create .form-group {
             margin-bottom: 15px; /* Reducir margen inferior */
         }
 
-        .form-group label {
+        .container-create .form-group label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
             color: var(--primary-color);
         }
 
-        .form-group input,
-        .form-group select {
+        .container-create .form-group input,
+        .container-create .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid var(--primary-color);
@@ -173,15 +175,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             background: #f9f9f9;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .container-create .form-group input:focus,
+        .container-create .form-group select:focus {
             border-color: var(--secondary-color);
             outline: none;
             box-shadow: 0 0 10px rgba(59, 65, 73, 0.2);
             background: #fff;
         }
 
-        .form-group button {
+        .container-create .form-group button {
             width: 100%;
             padding: 10px;
             background: var(--primary-color);
@@ -194,28 +196,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             transition: background 0.3s ease, transform 0.3s ease;
         }
 
-        .form-group button:hover {
+        .container-create .form-group button:hover {
             background: var(--secondary-color);
             transform: translateY(-3px);
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .form-group button:active {
+        .container-create .form-group button:active {
             transform: translateY(-1px);
         }
 
-        .form-group span.error {
+        .container-create .form-group span.error {
             color: red;
             font-size: 0.9em;
             display: block;
             margin-top: 5px;
         }
 
-        .form-group p {
+        .container-create .form-group p {
             margin-top: 10px;
             text-align: center;
             color: var(--primary-color);
             font-weight: bold;
+        }
+
+        .container-create .step {
+            display: none;
+        }
+
+        .container-create .step.active {
+            display: block;
+        }
+
+        .step-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .step-buttons button {
+            width: 48%;
+        }
+
+        .step-buttons .next-button,
+        .step-buttons .prev-button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .step-buttons .next-button:hover,
+        .step-buttons .prev-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
         }
 
         /* Animaciones */
@@ -232,20 +268,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         /* Responsive */
         @media screen and (max-width: 600px) {
-           .container {
+            .container-create {
                 width: 100%;
             }
         }
 
         @media screen and (max-width: 400px) {
-           .form-group {
+            .form-group {
                 margin-bottom: 10px; /* Reducir margen inferior */
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container-create">
         <h2>Crear Cuenta</h2>
 
         <?php
@@ -255,70 +291,111 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         ?>
 
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-            <div class="form-group">
-                <label for="nombre">Nombres:</label>
-                <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($nombre ?? ''); ?>">
-                <?php if (isset($errores['nombre'])) echo '<span class="error">'.$errores['nombre'].'</span>'; ?>
+        <form id="createAccountForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <!-- Step 1 -->
+            <div class="step active">
+                <p class="step-description">Paso 1: Información Personal</p>
+                <div class="form-group">
+                    <label for="nombre">Nombres:</label>
+                    <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($nombre ?? ''); ?>">
+                    <?php if (isset($errores['nombre'])) echo '<span class="error">'.$errores['nombre'].'</span>'; ?>
+                </div>
+                <div class="form-group">
+                    <label for="apellidos">Apellidos:</label>
+                    <input type="text" id="apellidos" name="apellidos" value="<?php echo htmlspecialchars($apellidos ?? ''); ?>">
+                    <?php if (isset($errores['apellidos'])) echo '<span class="error">'.$errores['apellidos'].'</span>'; ?>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="next-button">Siguiente</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="apellidos">Apellidos:</label>
-                <input type="text" id="apellidos" name="apellidos" value="<?php echo htmlspecialchars($apellidos ?? ''); ?>">
-                <?php if (isset($errores['apellidos'])) echo '<span class="error">'.$errores['apellidos'].'</span>'; ?>
+
+            <!-- Step 2 -->
+            <div class="step">
+                <p class="step-description">Paso 2: Información de Contacto</p>
+                <div class="form-group">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($fecha_nacimiento ?? ''); ?>">
+                    <?php if (isset($errores['fecha_nacimiento'])) echo '<span class="error">'.$errores['fecha_nacimiento'].'</span>'; ?>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono:</label>
+                    <input type="number" id="telefono" name="telefono" value="<?php echo htmlspecialchars($telefono ?? ''); ?>">
+                    <?php if (isset($errores['telefono'])) echo '<span class="error">'.$errores['telefono'].'</span>'; ?>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="prev-button">Anterior</button>
+                    <button type="button" class="next-button">Siguiente</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" value="<?php echo htmlspecialchars($fecha_nacimiento ?? ''); ?>">
-                <?php if (isset($errores['fecha_nacimiento'])) echo '<span class="error">'.$errores['fecha_nacimiento'].'</span>'; ?>
+
+            <!-- Step 3 -->
+            <div class="step">
+                <p class="step-description">Paso 3: Documentación</p>
+                <div class="form-group">
+                    <label for="tipo_documento">Tipo de Documento:</label>
+                    <select id="tipo_documento" name="tipo_documento">
+                        <option value="">Seleccione</option>
+                        <option value="CC" <?php echo (isset($tipo_documento) && $tipo_documento == 'CC') ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
+                        <option value="CE" <?php echo (isset($tipo_documento) && $tipo_documento == 'CE') ? 'selected' : ''; ?>>Cédula de Extranjería</option>
+                    </select>
+                    <?php if (isset($errores['tipo_documento'])) echo '<span class="error">'.$errores['tipo_documento'].'</span>'; ?>
+                </div>
+                <div class="form-group">
+                    <label for="numero_documento">Número de Documento:</label>
+                    <input type="number" id="numero_documento" name="numero_documento" value="<?php echo htmlspecialchars($numero_documento ?? ''); ?>">
+                    <?php if (isset($errores['numero_documento'])) echo '<span class="error">'.$errores['numero_documento'].'</span>'; ?>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="prev-button">Anterior</button>
+                    <button type="button" class="next-button">Siguiente</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="telefono">Teléfono:</label>
-                <input type="number" id="telefono" name="telefono" value="<?php echo htmlspecialchars($telefono ?? ''); ?>">
-                <?php if (isset($errores['telefono'])) echo '<span class="error">'.$errores['telefono'].'</span>'; ?>
+
+            <!-- Step 4 -->
+            <div class="step">
+                <p class="step-description">Paso 4: Detalles de la Cuenta</p>
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" name="correo" value="<?php echo htmlspecialchars($correo ?? ''); ?>">
+                    <?php if (isset($errores['correo'])) echo '<span class="error">'.$errores['correo'].'</span>'; ?>
+                </div>
+                <div class="form-group">
+                    <label for="rol">Rol:</label>
+                    <select id="rol" name="rol">
+                        <option value="">Seleccione</option>
+                        <option value="operador_logistico" <?php echo (isset($rol) && $rol == 'operador_logistico') ? 'selected' : ''; ?>>Operador Logístico</option>
+                        <option value="solicitante_transporte" <?php echo (isset($rol) && $rol == 'solicitante_transporte') ? 'selected' : ''; ?>>Solicitante de Transporte</option>
+                    </select>
+                    <?php if (isset($errores['rol'])) echo '<span class="error">'.$errores['rol'].'</span>'; ?>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="prev-button">Anterior</button>
+                    <button type="button" class="next-button">Siguiente</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="tipo_documento">Tipo de Documento:</label>
-                <select id="tipo_documento" name="tipo_documento">
-                    <option value="">Seleccione</option>
-                    <option value="CC" <?php echo (isset($tipo_documento) && $tipo_documento == 'CC') ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
-                    <option value="CE" <?php echo (isset($tipo_documento) && $tipo_documento == 'CE') ? 'selected' : ''; ?>>Cédula de Extranjería</option>
-                </select>
-                <?php if (isset($errores['tipo_documento'])) echo '<span class="error">'.$errores['tipo_documento'].'</span>'; ?>
-            </div>
-            <div class="form-group">
-                <label for="numero_documento">Número de Documento:</label>
-                <input type="number" id="numero_documento" name="numero_documento" value="<?php echo htmlspecialchars($numero_documento ?? ''); ?>">
-                <?php if (isset($errores['numero_documento'])) echo '<span class="error">'.$errores['numero_documento'].'</span>'; ?>
-            </div>
-            <div class="form-group">
-                <label for="correo">Correo Electrónico:</label>
-                <input type="email" id="correo" name="correo" value="<?php echo htmlspecialchars($correo ?? ''); ?>">
-                <?php if (isset($errores['correo'])) echo '<span class="error">'.$errores['correo'].'</span>'; ?>
-            </div>
-            <div class="form-group">
-                <label for="rol">Rol:</label>
-                <select id="rol" name="rol">
-                    <option value="">Seleccione</option>
-                    <option value="operador_logistico" <?php echo (isset($rol) && $rol == 'operador_logistico') ? 'selected' : ''; ?>>Operador Logístico</option>
-                    <option value="solicitante_transporte" <?php echo (isset($rol) && $rol == 'solicitante_transporte') ? 'selected' : ''; ?>>Solicitante de Transporte</option>
-                </select>
-                <?php if (isset($errores['rol'])) echo '<span class="error">'.$errores['rol'].'</span>'; ?>
-            </div>
-            <div class="form-group">
-                <label for="contrasena">Contraseña:</label>
-                <input type="password" id="contrasena" name="contrasena" value="<?php echo htmlspecialchars($contrasena ?? ''); ?>">
-                <?php if (isset($errores['contrasena'])) echo '<span class="error">'.$errores['contrasena'].'</span>'; ?>
-            </div>
-            <div class="form-group">
-                <label for="confirmar_contrasena">Confirmar Contraseña:</label>
-                <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" value="<?php echo htmlspecialchars($confirmar_contrasena ?? ''); ?>">
-                <?php if (isset($errores['confirmar_contrasena'])) echo '<span class="error">'.$errores['confirmar_contrasena'].'</span>'; ?>
-            </div>
-            <div class="form-group">
-                <button type="submit">Crear Cuenta</button>
+
+            <!-- Step 5 -->
+            <div class="step">
+                <p class="step-description">Paso 5: Seguridad de la Cuenta</p>
+                <div class="form-group">
+                    <label for="contrasena">Contraseña:</label>
+                    <input type="password" id="contrasena" name="contrasena" value="<?php echo htmlspecialchars($contrasena ?? ''); ?>">
+                    <?php if (isset($errores['contrasena'])) echo '<span class="error">'.$errores['contrasena'].'</span>'; ?>
+                </div>
+                <div class="form-group">
+                    <label for="confirmar_contrasena">Confirmar Contraseña:</label>
+                    <input type="password" id="confirmar_contrasena" name="confirmar_contrasena" value="<?php echo htmlspecialchars($confirmar_contrasena ?? ''); ?>">
+                    <?php if (isset($errores['confirmar_contrasena'])) echo '<span class="error">'.$errores['confirmar_contrasena'].'</span>'; ?>
+                </div>
+                <div class="step-buttons">
+                    <button type="button" class="prev-button">Anterior</button>
+                    <button type="submit">Crear Cuenta</button>
+                </div>
             </div>
         </form>
     </div>
+
     <?php if ($cuentaCreada): ?>
     <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
     <script>
@@ -344,10 +421,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }, 3000); 
         });
     </script>
-
     <?php endif; ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const nextButtons = document.querySelectorAll('.next-button');
+            const prevButtons = document.querySelectorAll('.prev-button');
+            const steps = document.querySelectorAll('.step');
+
+            let currentStep = 0;
+
+            nextButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    steps[currentStep].classList.remove('active');
+                    currentStep++;
+                    steps[currentStep].classList.add('active');
+                });
+            });
+
+            prevButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    steps[currentStep].classList.remove('active');
+                    currentStep--;
+                    steps[currentStep].classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 <?php
-    include 'footer.php'; 
-    ?>
+include 'footer.php'; 
+?>

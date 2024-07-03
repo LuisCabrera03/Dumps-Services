@@ -4,6 +4,7 @@ session_start();
 
 // Incluir el archivo de conexión a la base de datos
 include 'conexion.php';
+include 'header.php';
 
 // Verificar si el usuario ya está autenticado
 if (isset($_SESSION['usuario_id'])) {
@@ -115,9 +116,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-family: var(--font-family);
             background-color: var(--background-color);
             color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             margin: 0;
         }
@@ -128,7 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             align-items: center;
             width: 80%;
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 10vh auto;
         }
 
         .login-form-container {
