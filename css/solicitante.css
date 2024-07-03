@@ -55,14 +55,30 @@ h2 {
 .hero-dump {
     position: relative;
     width: 100%;
-    height: 300px;
-    background-color: var(--primary-color);
+    height: 100vh; /* Aumentado para acomodar más contenido */
+    background-image: url(https://www.revistaautocrash.com/wp-content/uploads/2022/09/Karguero-1-768x512.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     color: #fff;
     text-align: center;
     padding: 20px;
+    overflow: hidden; /* Para asegurar que nada se salga del contenedor */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Superposición semitransparente */
+    z-index: 1;
 }
 
 .imagen-logotipo-dump {
@@ -70,6 +86,7 @@ h2 {
     margin-bottom: 20px;
     border-radius: 10px;
     transition: transform var(--transition-speed) ease-in-out;
+    z-index: 2; /* Asegura que el logo esté por encima de la superposición */
 }
 
 .imagen-logotipo-dump:hover {
@@ -77,12 +94,72 @@ h2 {
 }
 
 .titulo-dump {
-    font-size: 3em;
+    font-size: 4em;
     font-weight: bold;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    margin: 20px 0;
+    margin: 10px 0;
+    z-index: 2;
+    animation: fadeIn 2s ease-in-out;
 }
 
+.subtitulo-dump {
+    font-size: 2em;
+    font-weight: 400;
+    margin-bottom: 20px;
+    z-index: 2;
+    animation: fadeIn 2s ease-in-out 0.5s;
+    animation-fill-mode: backwards;
+}
+.descripcion-dump {
+    font-size: 1.7em;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: #e0e0e0;
+    z-index: 2;
+    animation: fadeIn 2s ease-in-out 1s;
+    animation-fill-mode: backwards;
+}
+
+.social-icons {
+    margin-top: 20px;
+    z-index: 2;
+    animation: fadeIn 2s ease-in-out 1s;
+    animation-fill-mode: backwards;
+}
+
+.social-icon {
+    color: #fff;
+    margin: 0 10px;
+    font-size: 1.7em;
+    transition: transform var(--transition-speed);
+}
+
+.social-icon:hover {
+    transform: scale(1.1);
+}
+.cta-button {
+    background-color: var(--button-background);
+    color: #fff;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+    z-index: 2;
+}
+
+.cta-button:hover {
+    background-color: var(--button-hover-background);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 /* Estilos de filas y columnas */
 .row-dump {
     display: flex;

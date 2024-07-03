@@ -1,6 +1,5 @@
 <?php
 include 'conexion.php';
-include 'header.php';
 
 // Consultas SQL
 $sql = "SELECT usuarios.nombre, COUNT(mensajes.id) AS num_mensajes 
@@ -49,90 +48,126 @@ $result7 = $conn->query($sql7);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
     <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-custom {
+            background-color: #343a40;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: #ffffff;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-title {
+            color: #495057;
+        }
         .chart-container {
-            margin: 20px auto;
-            text-align: center;
-            max-width: 800px;
+            padding: 20px;
         }
-
-        canvas {
-            display: block;
-            margin: 0 auto;
-            max-width: 100%;
-        }
-
         .table-container {
             margin-top: 20px;
+        }
+        .btn-custom {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #138496;
+        }
+        .navbar-nav .nav-item:not(:last-child) {
+            margin-right: 15px;
+        }
+        .navbar-nav .nav-link {
+            font-size: 1.1rem;
+            padding: 10px 15px;
         }
     </style>
 </head>
 
 <body>
     <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Panel de Control</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="admin_usuarios.php">Gestión de usuarios</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Panel de Control</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin_usuarios.php">Gestión de usuarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="perfil.php">Perfil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Cerrar sesión</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h2 class="text-center text-primary mb-4">Panel de Control</h2>
+    <div class="container">
+        <h2 class="text-center text-custom mb-4">Panel de Control</h2>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="chart-container card shadow-sm">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="chart-container card">
                     <div class="card-body">
-                        <h5 class="card-title text-secondary">Número de mensajes por usuario</h5>
+                        <h5 class="card-title">Número de mensajes por usuario</h5>
                         <canvas id="mensajesChart"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="chart-container card shadow-sm">
+            <div class="col">
+                <div class="chart-container card">
                     <div class="card-body">
-                        <h5 class="card-title text-secondary">Número de solicitudes por operario</h5>
+                        <h5 class="card-title">Número de solicitudes por operario</h5>
                         <canvas id="solicitudesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="chart-container card">
+                    <div class="card-body">
+                        <h5 class="card-title">Número de mensajes por fecha</h5>
+                        <canvas id="mensajesPorFechaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="chart-container card">
+                    <div class="card-body">
+                        <h5 class="card-title">Distribución de estados de las solicitudes</h5>
+                        <canvas id="estadosSolicitudesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="chart-container card">
+                    <div class="card-body">
+                        <h5 class="card-title">Distribución de usuarios por rol</h5>
+                        <canvas id="usuariosPorRolChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="chart-container card shadow-sm mt-4">
+        <div class="table-container card mt-4">
             <div class="card-body">
-                <h5 class="card-title text-secondary">Número de mensajes por fecha</h5>
-                <canvas id="mensajesPorFechaChart"></canvas>
-            </div>
-        </div>
-
-        <div class="chart-container card shadow-sm mt-4">
-            <div class="card-body">
-                <h5 class="card-title text-secondary">Distribución de estados de las solicitudes</h5>
-                <canvas id="estadosSolicitudesChart"></canvas>
-            </div>
-        </div>
-
-        <div class="chart-container card shadow-sm mt-4">
-            <div class="card-body">
-                <h5 class="card-title text-secondary">Distribución de usuarios por rol</h5>
-                <canvas id="usuariosPorRolChart"></canvas>
-            </div>
-        </div>
-
-        <div class="table-container card shadow-sm mt-4">
-            <div class="card-body">
-                <h5 class="card-title text-secondary">Usuarios activos (última semana)</h5>
+                <h5 class="card-title">Usuarios activos (última semana)</h5>
                 <table class="table table-striped table-bordered">
                     <thead class="thead-dark">
                         <tr>
@@ -152,9 +187,9 @@ $result7 = $conn->query($sql7);
             </div>
         </div>
 
-        <div class="table-container card shadow-sm mt-4 mb-5">
+        <div class="table-container card mt-4 mb-5">
             <div class="card-body">
-                <h5 class="card-title text-secondary">Operarios con calificación promedio</h5>
+                <h5 class="card-title">Operarios con calificación promedio</h5>
                 <table class="table table-striped table-bordered">
                     <thead class="thead-dark">
                         <tr>
@@ -173,6 +208,8 @@ $result7 = $conn->query($sql7);
                 </table>
             </div>
         </div>
+
+        <button class="btn btn-custom my-3" onclick="window.location.href='reporte.php'">Descargar Reporte</button>
     </div>
 
     <script>
@@ -219,47 +256,29 @@ $result7 = $conn->query($sql7);
 
         <?php
         // Datos para los gráficos
-        $labels1 = [];
-        $data1 = [];
-        while ($row = $result->fetch_assoc()) {
-            $labels1[] = "'" . $row['nombre'] . "'";
-            $data1[] = $row['num_mensajes'];
+        function prepararDatos($resultado, $labelCampo, $dataCampo)
+        {
+            $labels = [];
+            $data = [];
+            while ($row = $resultado->fetch_assoc()) {
+                $labels[] = "'" . $row[$labelCampo] . "'";
+                $data[] = $row[$dataCampo];
+            }
+            return [implode(',', $labels), implode(',', $data)];
         }
 
-        $labels2 = [];
-        $data2 = [];
-        while ($row2 = $result2->fetch_assoc()) {
-            $labels2[] = "'" . $row2['id_operario'] . "'";
-            $data2[] = $row2['num_solicitudes'];
-        }
-
-        $labels3 = [];
-        $data3 = [];
-        while ($row3 = $result3->fetch_assoc()) {
-            $labels3[] = "'" . $row3['fecha'] . "'";
-            $data3[] = $row3['num_mensajes'];
-        }
-
-        $labels4 = [];
-        $data4 = [];
-        while ($row4 = $result4->fetch_assoc()) {
-            $labels4[] = "'" . $row4['estado'] . "'";
-            $data4[] = $row4['num_solicitudes'];
-        }
-
-        $labels5 = [];
-        $data5 = [];
-        while ($row7 = $result7->fetch_assoc()) {
-            $labels5[] = "'" . $row7['rol'] . "'";
-            $data5[] = $row7['num_usuarios'];
-        }
+        list($labels1, $data1) = prepararDatos($result, 'nombre', 'num_mensajes');
+        list($labels2, $data2) = prepararDatos($result2, 'id_operario', 'num_solicitudes');
+        list($labels3, $data3) = prepararDatos($result3, 'fecha', 'num_mensajes');
+        list($labels4, $data4) = prepararDatos($result4, 'estado', 'num_solicitudes');
+        list($labels5, $data5) = prepararDatos($result7, 'rol', 'num_usuarios');
         ?>
 
         createChart(
             document.getElementById('mensajesChart').getContext('2d'),
             'bar',
-            [<?php echo implode(',', $labels1); ?>],
-            [<?php echo implode(',', $data1); ?>],
+            [<?php echo $labels1; ?>],
+            [<?php echo $data1; ?>],
             'Número de Mensajes',
             'rgba(54, 162, 235, 0.2)',
             'rgba(54, 162, 235, 1)'
@@ -268,8 +287,8 @@ $result7 = $conn->query($sql7);
         createChart(
             document.getElementById('solicitudesChart').getContext('2d'),
             'bar',
-            [<?php echo implode(',', $labels2); ?>],
-            [<?php echo implode(',', $data2); ?>],
+            [<?php echo $labels2; ?>],
+            [<?php echo $data2; ?>],
             'Número de Solicitudes',
             'rgba(255, 99, 132, 0.2)',
             'rgba(255, 99, 132, 1)'
@@ -278,8 +297,8 @@ $result7 = $conn->query($sql7);
         createChart(
             document.getElementById('mensajesPorFechaChart').getContext('2d'),
             'line',
-            [<?php echo implode(',', $labels3); ?>],
-            [<?php echo implode(',', $data3); ?>],
+            [<?php echo $labels3; ?>],
+            [<?php echo $data3; ?>],
             'Número de Mensajes',
             'rgba(75, 192, 192, 0.2)',
             'rgba(75, 192, 192, 1)'
@@ -288,8 +307,8 @@ $result7 = $conn->query($sql7);
         createChart(
             document.getElementById('estadosSolicitudesChart').getContext('2d'),
             'pie',
-            [<?php echo implode(',', $labels4); ?>],
-            [<?php echo implode(',', $data4); ?>],
+            [<?php echo $labels4; ?>],
+            [<?php echo $data4; ?>],
             'Distribución de Estados de las Solicitudes',
             [
                 'rgba(255, 99, 132, 0.2)',
@@ -312,13 +331,15 @@ $result7 = $conn->query($sql7);
         createChart(
             document.getElementById('usuariosPorRolChart').getContext('2d'),
             'bar',
-            [<?php echo implode(',', $labels5); ?>],
-            [<?php echo implode(',', $data5); ?>],
+            [<?php echo $labels5; ?>],
+            [<?php echo $data5; ?>],
             'Número de Usuarios',
             'rgba(255, 206, 86, 0.2)',
             'rgba(255, 206, 86, 1)'
         );
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>
