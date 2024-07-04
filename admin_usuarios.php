@@ -1,90 +1,45 @@
 <?php
 include 'conexion.php';
 include 'header.php';
-// Manejo de la eliminación de usuario
-if (isset($_GET['delete'])) {
-    $userId = $_GET['delete'];
 
-    // Iniciar una transacción
-    $conn->begin_transaction();
+$searchTerm = '';
+$filterBy = 'nombre';
+$page = 1;
+$resultsPerPage = 10;
 
-    try {
-        // Eliminar todos los mensajes del usuario primero
-        $sql_delete_messages = "DELETE FROM mensajes WHERE id_usuario = $userId";
-        if ($conn->query($sql_delete_messages) !== TRUE) {
-            throw new Exception("Error al eliminar mensajes del usuario: " . $conn->error);
-        }
+if (isset($_GET['search'])) {
+    $searchTerm = $_GET['search'];
+}
 
-        // Obtener todos los operarios del usuario
-        $sql_select_operarios = "SELECT id_operario FROM operarios WHERE id_usuario = $userId";
-        $result_operarios = $conn->query($sql_select_operarios);
-        if ($result_operarios->num_rows > 0) {
-            while ($row_operario = $result_operarios->fetch_assoc()) {
-                $operarioId = $row_operario['id_operario'];
-
-                // Obtener todas las solicitudes del operario
-                $sql_select_solicitudes = "SELECT id FROM solicitudes WHERE id_operario = $operarioId";
-                $result_solicitudes = $conn->query($sql_select_solicitudes);
-                if ($result_solicitudes->num_rows > 0) {
-                    while ($row_solicitud = $result_solicitudes->fetch_assoc()) {
-                        $solicitudId = $row_solicitud['id'];
-
-                        // Eliminar todas las calificaciones de la solicitud
-                        $sql_delete_calificaciones = "DELETE FROM calificaciones WHERE id_solicitud = $solicitudId";
-                        if ($conn->query($sql_delete_calificaciones) !== TRUE) {
-                            throw new Exception("Error al eliminar calificaciones de la solicitud: " . $conn->error);
-                        }
-                    }
-
-                    // Eliminar todas las solicitudes del operario
-                    $sql_delete_solicitudes = "DELETE FROM solicitudes WHERE id_operario = $operarioId";
-                    if ($conn->query($sql_delete_solicitudes) !== TRUE) {
-                        throw new Exception("Error al eliminar solicitudes del operario: " . $conn->error);
-                    }
-                }
-            }
-        }
-
-        // Eliminar todos los operarios del usuario
-        $sql_delete_operarios = "DELETE FROM operarios WHERE id_usuario = $userId";
-        if ($conn->query($sql_delete_operarios) !== TRUE) {
-            throw new Exception("Error al eliminar operarios del usuario: " . $conn->error);
-        }
-
-        // Luego eliminar el usuario
-        $sql_delete_user = "DELETE FROM usuarios WHERE id = $userId";
-        if ($conn->query($sql_delete_user) !== TRUE) {
-            throw new Exception("Error al eliminar usuario: " . $conn->error);
-        }
-
-        // Confirmar la transacción
-        $conn->commit();
-        echo "Usuario eliminado correctamente";
-    } catch (Exception $e) {
-        // Revertir la transacción en caso de error
-        $conn->rollback();
-        echo $e->getMessage();
+if (isset($_GET['filter'])) {
+    $filterBy = $_GET['filter'];
+    if (!in_array($filterBy, ['id', 'nombre', 'correo'])) {
+        $filterBy = 'nombre'; // Valor predeterminado
     }
 }
 
-// Manejo de la edición de usuario
-if (isset($_POST['edit_user'])) {
-    $userId = $_POST['id'];
-    $nombre = $_POST['nombre'];
-    $correo = $_POST['correo'];
-    $rol = $_POST['rol'];
-
-    $sql = "UPDATE usuarios SET nombre='$nombre', correo='$correo', rol='$rol' WHERE id = $userId";
-    if ($conn->query($sql) === TRUE) {
-        echo "Usuario actualizado correctamente";
-    } else {
-        echo "Error al actualizar usuario: " . $conn->error;
-    }
+if (isset($_GET['page'])) {
+    $page = (int)$_GET['page'];
 }
 
-// Consulta para obtener todos los usuarios
-$sql = "SELECT * FROM usuarios";
+$offset = ($page - 1) * $resultsPerPage;
+
+$sql = "SELECT id, nombre, correo, rol FROM usuarios WHERE $filterBy LIKE '%$searchTerm%' LIMIT $resultsPerPage OFFSET $offset";
 $result = $conn->query($sql);
+
+// Verificar errores en la consulta
+if (!$result) {
+    die("Error en la consulta: " . $conn->error);
+}
+
+// Obtener el total de resultados para la paginación
+$sql_total = "SELECT COUNT(*) as total FROM usuarios WHERE $filterBy LIKE '%$searchTerm%'";
+$totalResult = $conn->query($sql_total);
+if (!$totalResult) {
+    die("Error en la consulta de conteo total: " . $conn->error);
+}
+$totalRows = $totalResult->fetch_assoc()['total'];
+$totalPages = ceil($totalRows / $resultsPerPage);
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -93,6 +48,7 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Usuarios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -187,41 +143,78 @@ $result = $conn->query($sql);
             text-align: center;
             color: #777;
         }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .form-select {
+            margin-right: 10px;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Administración de Usuarios</h2>
-        <?php if ($result->num_rows > 0): ?>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = $result->fetch_assoc()): ?>
+        
+        <form method="GET" action="admin_usuarios.php">
+            <div class="input-group">
+                <select name="filter" class="form-select" aria-label="Filtro">
+                    <option value="id" <?php if ($filterBy == 'id') echo 'selected'; ?>>ID</option>
+                    <option value="nombre" <?php if ($filterBy == 'nombre') echo 'selected'; ?>>Nombre</option>
+                    <option value="correo" <?php if ($filterBy == 'correo') echo 'selected'; ?>>Correo</option>
+                </select>
+                <input type="text" name="search" class="form-control" placeholder="Buscar usuarios" value="<?php echo $searchTerm; ?>" onkeyup="fetchResults(this.value, '<?php echo $filterBy; ?>')">
+                <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+            </div>
+        </form>
+        
+        <div id="results">
+            <?php if ($result->num_rows > 0): ?>
+                <table class="table table-striped">
+                    <thead>
                         <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo $row['nombre']; ?></td>
-                            <td><?php echo isset($row['correo']) ? $row['correo'] : 'No definido'; ?></td>
-                            <td><?php echo $row['rol']; ?></td>
-                            <td>
-                                <a href="#" class="view-btn" data-bs-toggle="modal" data-bs-target="#viewUserModal" data-id="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-correo="<?php echo $row['correo']; ?>" data-rol="<?php echo $row['rol']; ?>">Ver</a>
-                                <a href="edit_usuario.php?id=<?php echo $row['id']; ?>" class="edit-btn">Editar</a>
-                                <a href="admin_usuarios.php?delete=<?php echo $row['id']; ?>" class="delete-btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">Eliminar</a>
-                            </td>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        <?php else: ?>
-            <p class="no-data">No se encontraron usuarios.</p>
-        <?php endif; ?>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?php echo $row['id']; ?></td>
+                                <td><?php echo $row['nombre']; ?></td>
+                                <td><?php echo isset($row['correo']) ? $row['correo'] : 'No definido'; ?></td>
+                                <td><?php echo $row['rol']; ?></td>
+                                <td>
+                                    <a href="#" class="view-btn" data-bs-toggle="modal" data-bs-target="#viewUserModal" data-id="<?php echo $row['id']; ?>" data-nombre="<?php echo $row['nombre']; ?>" data-correo="<?php echo $row['correo']; ?>" data-rol="<?php echo $row['rol']; ?>"><i class="icon bi bi-eye"></i>Ver</a>
+                                    <a href="edit_usuario.php?id=<?php echo $row['id']; ?>" class="edit-btn"><i class="icon bi bi-pencil-square"></i>Editar</a>
+                                    <a href="admin_usuarios.php?delete=<?php echo $row['id']; ?>" class="delete-btn" onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"><i class="icon bi bi-trash"></i>Eliminar</a>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+                
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <li class="page-item <?php if ($i == $page) echo 'active'; ?>">
+                                <a class="page-link" href="admin_usuarios.php?page=<?php echo $i; ?>&search=<?php echo $searchTerm; ?>&filter=<?php echo $filterBy; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+                    </ul>
+                </nav>
+            <?php else: ?>
+                <p class="no-data">No se encontraron usuarios.</p>
+            <?php endif; ?>
+        </div>
     </div>
 
     <!-- Modal para ver usuario -->
@@ -236,6 +229,8 @@ $result = $conn->query($sql);
                     <p><strong>ID:</strong> <span id="userId"></span></p>
                     <p><strong>Nombre:</strong> <span id="userName"></span></p>
                     <p><strong>Correo:</strong> <span id="userEmail"></span></p>
+                    <p><strong>Teléfono:</strong> <span id="userPhone"></span></p>
+                    <p><strong>Contraseña:</strong> <span id="userPassword"></span></p>
                     <p><strong>Rol:</strong> <span id="userRole"></span></p>
                 </div>
                 <div class="modal-footer">
@@ -247,6 +242,7 @@ $result = $conn->query($sql);
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
     <script>
         var viewUserModal = document.getElementById('viewUserModal');
         viewUserModal.addEventListener('show.bs.modal', function (event) {
@@ -260,14 +256,34 @@ $result = $conn->query($sql);
             var modalBodyId = viewUserModal.querySelector('#userId');
             var modalBodyName = viewUserModal.querySelector('#userName');
             var modalBodyEmail = viewUserModal.querySelector('#userEmail');
+            var modalBodyPhone = viewUserModal.querySelector('#userPhone');
+            var modalBodyPassword = viewUserModal.querySelector('#userPassword');
             var modalBodyRole = viewUserModal.querySelector('#userRole');
 
             modalTitle.textContent = 'Detalles del Usuario: ' + userName;
-            modalBodyId.textContent = userId;
-            modalBodyName.textContent = userName;
-            modalBodyEmail.textContent = userEmail;
-            modalBodyRole.textContent = userRole;
+            
+            // Fetch additional data for the modal
+            fetch('get_user_details.php?id=' + userId)
+                .then(response => response.json())
+                .then(data => {
+                    modalBodyId.textContent = data.id;
+                    modalBodyName.textContent = data.nombre;
+                    modalBodyEmail.textContent = data.correo;
+                    modalBodyPhone.textContent = data.telefono;
+                    modalBodyPassword.textContent = data.contrasena;
+                    modalBodyRole.textContent = data.rol;
+                })
+                .catch(error => console.error('Error:', error));
         });
+
+        function fetchResults(searchTerm, filterBy) {
+            fetch(`fetch_results.php?search=${searchTerm}&filter=${filterBy}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('results').innerHTML = html;
+                })
+                .catch(error => console.error('Error:', error));
+        }
     </script>
 </body>
 </html>
