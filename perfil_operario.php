@@ -101,270 +101,186 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro de Operario</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Variables CSS */
-        :root {
-            --primary-color: #00132B;
-            --secondary-color: #3B4149;
-            --background-color: #f2f2f2;
-            --text-color: #333;
-            --input-background: #fff;
-            --link-color: #064575;
-            --font-family: 'Roboto', sans-serif;
-            --transition-speed: 0.3s;
-        }
-
-        /* Estilos generales */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-family);
-            background-color: var(--background-color);
-            color: var(--text-color);
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
             min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
-        header, footer {
-            width: 100%;
-            background-color: var(--primary-color);
-            color: #fff;
-            text-align: center;
-            padding: 10px 0;
+        .d-flex-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
         .container {
-            background: var(--input-background);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-            margin-top: 20px;
-            margin-bottom: 20px;
-            animation: slideIn var(--transition-speed) ease-out;
-            border-left: 5px solid var(--primary-color);
-            border-right: 5px solid var(--secondary-color);
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
         }
 
         h2 {
             text-align: center;
             margin-bottom: 20px;
-            color: var(--primary-color);
-            position: relative;
-            padding-bottom: 10px;
+            color: #007bff;
         }
 
-        h2:after {
-            content: "";
-            width: 50px;
-            height: 3px;
-            background: var(--secondary-color);
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        form {
+        .btn-primary, .btn-success {
             width: 100%;
+            margin-top: 20px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-            width: 100%;
+        .btn-next, .btn-prev {
+            margin-top: 20px;
+            width: 48%;
         }
 
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: var(--primary-color);
-            display: block;
+        .btn-prev {
+            background-color: #6c757d;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--primary-color);
-            border-radius: 5px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            background: #f9f9f9;
+        .progress {
+            height: 25px;
         }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-            box-shadow: 0 0 10px rgba(59, 65, 73, 0.2);
-            background: #fff;
-        }
-
-        .form-group input[type="file"] {
-            padding: 5px;
-        }
-
-        .form-group button,
-        .form-group input[type="submit"] {
-            padding: 10px;
-            background: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: background 0.3s ease, transform 0.3s ease;
-            width: 100%;
-        }
-
-        .form-group button:hover,
-        .form-group input[type="submit"]:hover {
-            background: var(--secondary-color);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group button:active,
-        .form-group input[type="submit"]:active {
-            transform: translateY(-1px);
-        }
-
-        .form-group.full-width textarea {
-            height: 100px;
-        }
-
-        /* Animaciones */
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Estilos para filas */
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            width: 100%;
-        }
-
-        .row .form-group {
-            flex: 1 1 calc(33.33% - 20px);
-        }
-
-        .row.full-width .form-group {
-            flex: 1 1 100%;
-        }
-
-        .clearfix::after {
-            content: "";
-            display: table;
-            clear: both;
-        }
-
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Registro de Operario</h2>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
-            <!-- Input oculto para el id_usuario -->
-            <input type="hidden" name="id_usuario" value="<?php echo $_COOKIE['usuario_id']; ?>">
-
-            <!-- Fila 1 -->
-            <div class="row clearfix">
-                <div class="form-group">
-                    <label for="marca">Marca del Motocarro:</label>
-                    <input type="text" id="marca" name="marca" required>
-                </div>
-                <div class="form-group">
-                    <label for="modelo">Modelo del Motocarro:</label>
-                    <input type="text" id="modelo" name="modelo" required>
-                </div>
-                <div class="form-group">
-                    <label for="año">Año de Fabricación:</label>
-                    <input type="number" id="año" name="año" required>
-                </div>
+    <div class="d-flex-center">
+        <div class="container">
+            <h2>Registro de Operario</h2>
+            <div class="progress mb-4">
+                <div id="progressBar" class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
             </div>
+            <form id="registroForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+                <!-- Input oculto para el id_usuario -->
+                <input type="hidden" name="id_usuario" value="<?php echo $_COOKIE['usuario_id']; ?>">
 
-            <!-- Fila 2 -->
-            <div class="row clearfix">
-                <div class="form-group">
-                    <label for="placa">Placa del Motocarro:</label>
-                    <input type="text" id="placa" name="placa" required>
+                <!-- Sección 1 -->
+                <div class="form-section">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="marca" class="form-label">Marca del Motocarro</label>
+                            <input type="text" class="form-control" id="marca" name="marca" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="modelo" class="form-label">Modelo del Motocarro</label>
+                            <input type="text" class="form-control" id="modelo" name="modelo" required>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="año" class="form-label">Año de Fabricación</label>
+                            <input type="number" class="form-control" id="año" name="año" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="placa" class="form-label">Placa del Motocarro</label>
+                            <input type="text" class="form-control" id="placa" name="placa" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-primary btn-next" onclick="showNextSection()">Siguiente</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="foto">Foto del Motocarro:</label>
-                    <input type="file" id="foto" name="foto" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <label for="direccion">Dirección del Domicilio:</label>
-                    <input type="text" id="direccion" name="direccion" required>
-                </div>
-            </div>
 
-            <!-- Fila 3 -->
-            <div class="row clearfix">
-                <?php for ($i = 1; $i <= 2; $i++) : ?>
-                <div class="form-group">
-                    <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
-                    <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                <!-- Sección 2 -->
+                <div class="form-section d-none">
+                    <div class="mb-3">
+                        <label for="foto" class="form-label">Foto del Motocarro</label>
+                        <input type="file" class="form-control" id="foto" name="foto" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección del Domicilio</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion" required>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-prev" onclick="showPrevSection()">Atrás</button>
+                        <button type="button" class="btn btn-primary btn-next" onclick="showNextSection()">Siguiente</button>
+                    </div>
                 </div>
-                <?php endfor; ?>
-                <div class="form-group full-width">
-                    <label for="certificado_antecedentes">Certificado de Antecedentes Judiciales:</label>
-                    <input type="file" id="certificado_antecedentes" name="certificado_antecedentes" accept="image/*">
-                </div>
-                <div class="form-group full-width">
-                    <label for="certificado_seguridad">Certificado de Seguridad Social:</label>
-                    <input type="file" id="certificado_seguridad" name="certificado_seguridad" accept="image/*">
-                </div>
-            </div>
 
-            <!-- Fila 4 -->
-            <div class="row clearfix">
-                <div class="form-group">
-                    <label for="licencia_conduccion">Licencia de Conducción:</label>
-                    <input type="file" id="licencia_conduccion" name="licencia_conduccion" accept="image/*">
+                <!-- Sección 3 -->
+                <div class="form-section d-none">
+                    <div class="mb-3">
+                        <label for="certificado_antecedentes" class="form-label">Certificado de Antecedentes Judiciales</label>
+                        <input type="file" class="form-control" id="certificado_antecedentes" name="certificado_antecedentes" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="certificado_seguridad" class="form-label">Certificado de Seguridad Social</label>
+                        <input type="file" class="form-control" id="certificado_seguridad" name="certificado_seguridad" accept="image/*">
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-prev" onclick="showPrevSection()">Atrás</button>
+                        <button type="button" class="btn btn-primary btn-next" onclick="showNextSection()">Siguiente</button>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="seguro_vehiculo">Seguro del Vehículo:</label>
-                    <input type="file" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*">
+
+                <!-- Sección 4 -->
+                <div class="form-section d-none">
+                    <div class="mb-3">
+                        <label for="licencia_conduccion" class="form-label">Licencia de Conducción</label>
+                        <input type="file" class="form-control" id="licencia_conduccion" name="licencia_conduccion" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="seguro_vehiculo" class="form-label">Seguro del Vehículo</label>
+                        <input type="file" class="form-control" id="seguro_vehiculo" name="seguro_vehiculo" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <label for="detalles" class="form-label">Otros Detalles</label>
+                        <textarea class="form-control" id="detalles" name="detalles" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fotos Adicionales</label>
+                        <div class="row">
+                            <?php for ($i = 1; $i <= 10; $i++) : ?>
+                                <div class="col-md-4 mb-3">
+                                    <label for="foto_<?php echo $i; ?>" class="form-label">Foto adicional <?php echo $i; ?></label>
+                                    <input type="file" class="form-control" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
+                                </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-prev" onclick="showPrevSection()">Atrás</button>
+                        <button type="submit" class="btn btn-success">Registrar Operario</button>
+                    </div>
                 </div>
-                <?php for ($i = 3; $i <= 6; $i++) : ?>
-                <div class="form-group">
-                    <label for="foto_<?php echo $i; ?>">Foto adicional <?php echo $i; ?>:</label>
-                    <input type="file" id="foto_<?php echo $i; ?>" name="foto_<?php echo $i; ?>" accept="image/*">
-                </div>
-                <?php endfor; ?>
-                <div class="form-group full-width">
-                    <label for="detalles">Otros Detalles:</label>
-                    <textarea id="detalles" name="detalles"></textarea>
-                </div>
-                <div class="form-group full-width">
-                    <input type="submit" value="Registrar Operario">
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
+    <script>
+        let currentSection = 0;
+        const sections = document.querySelectorAll('.form-section');
+        const progressBar = document.getElementById('progressBar');
+
+        function showNextSection() {
+            sections[currentSection].classList.add('d-none');
+            currentSection++;
+            sections[currentSection].classList.remove('d-none');
+            updateProgressBar();
+        }
+
+        function showPrevSection() {
+            sections[currentSection].classList.add('d-none');
+            currentSection--;
+            sections[currentSection].classList.remove('d-none');
+            updateProgressBar();
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentSection + 1) / sections.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressBar.setAttribute('aria-valuenow', progress);
+            progressBar.innerHTML = `${progress}%`;
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
