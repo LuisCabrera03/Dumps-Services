@@ -32,13 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $mail->isSMTP();
                     $mail->Host = 'smtp.gmail.com'; // Servidor SMTP de tu proveedor de correo
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'cabrerasarrialuis@gmail.com'; // Tu correo electrónico
-                    $mail->Password = 'bmrg jamz wnvb zvos'; // Tu contraseña de aplicación
+                    $mail->Username = 'soportedumpservices@gmail.com'; // Tu correo electrónico
+                    $mail->Password = 'nerx pjbw qmdp gobr'; // Tu contraseña de aplicación
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port = 587;
 
                     // Destinatarios
-                    $mail->setFrom('tucorreo@gmail.com', 'Dump Services');
+                    $mail->setFrom('soportedumpservices@gmail.com', 'Dump Services');
                     $mail->addAddress($correo);
 
                     // Contenido del correo
