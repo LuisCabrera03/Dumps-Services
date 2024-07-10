@@ -2,6 +2,43 @@
 include 'conexion.php';
 include 'header.php';
 
+// Manejo de eliminación de usuario
+if (isset($_GET['delete'])) {
+    $userId = $_GET['delete'];
+    
+    // Iniciar transacción
+    $conn->begin_transaction();
+    
+    try {
+        // Eliminar registros relacionados en la tabla mensajes
+        $sql_delete_mensajes = "DELETE FROM mensajes WHERE id_usuario = $userId";
+        if (!$conn->query($sql_delete_mensajes)) {
+            throw new Exception("Error al eliminar mensajes: " . $conn->error);
+        }
+        
+        // Eliminar registros relacionados en la tabla operarios
+        $sql_delete_operario = "DELETE FROM operarios WHERE id_usuario = $userId";
+        if (!$conn->query($sql_delete_operario)) {
+            throw new Exception("Error al eliminar operario: " . $conn->error);
+        }
+        
+        // Eliminar el usuario de la base de datos
+        $sql_delete_user = "DELETE FROM usuarios WHERE id = $userId";
+        if (!$conn->query($sql_delete_user)) {
+            throw new Exception("Error al eliminar usuario: " . $conn->error);
+        }
+        
+        // Confirmar transacción
+        $conn->commit();
+        
+        echo "<script>alert('Usuario eliminado correctamente.'); window.location.href='admin_usuarios.php';</script>";
+    } catch (Exception $e) {
+        // Revertir transacción en caso de error
+        $conn->rollback();
+        echo "<script>alert('" . $e->getMessage() . "');</script>";
+    }
+}
+
 $searchTerm = '';
 $filterBy = 'nombre';
 $page = 1;
@@ -168,7 +205,7 @@ $totalPages = ceil($totalRows / $resultsPerPage);
                     <option value="nombre" <?php if ($filterBy == 'nombre') echo 'selected'; ?>>Nombre</option>
                     <option value="correo" <?php if ($filterBy == 'correo') echo 'selected'; ?>>Correo</option>
                 </select>
-                <input type="text" name="search" class="form-control" placeholder="Buscar usuarios" value="<?php echo $searchTerm; ?>" onkeyup="fetchResults(this.value, '<?php echo $filterBy; ?>')">
+                <input type="text" name="search" class="form-control" placeholder="Buscar usuarios" value="<?php echo $searchTerm; ?>">
                 <button class="btn btn-outline-secondary" type="submit">Buscar</button>
             </div>
         </form>
@@ -229,8 +266,6 @@ $totalPages = ceil($totalRows / $resultsPerPage);
                     <p><strong>ID:</strong> <span id="userId"></span></p>
                     <p><strong>Nombre:</strong> <span id="userName"></span></p>
                     <p><strong>Correo:</strong> <span id="userEmail"></span></p>
-                    <p><strong>Teléfono:</strong> <span id="userPhone"></span></p>
-                    <p><strong>Contraseña:</strong> <span id="userPassword"></span></p>
                     <p><strong>Rol:</strong> <span id="userRole"></span></p>
                 </div>
                 <div class="modal-footer">
@@ -256,8 +291,6 @@ $totalPages = ceil($totalRows / $resultsPerPage);
             var modalBodyId = viewUserModal.querySelector('#userId');
             var modalBodyName = viewUserModal.querySelector('#userName');
             var modalBodyEmail = viewUserModal.querySelector('#userEmail');
-            var modalBodyPhone = viewUserModal.querySelector('#userPhone');
-            var modalBodyPassword = viewUserModal.querySelector('#userPassword');
             var modalBodyRole = viewUserModal.querySelector('#userRole');
 
             modalTitle.textContent = 'Detalles del Usuario: ' + userName;
@@ -269,21 +302,10 @@ $totalPages = ceil($totalRows / $resultsPerPage);
                     modalBodyId.textContent = data.id;
                     modalBodyName.textContent = data.nombre;
                     modalBodyEmail.textContent = data.correo;
-                    modalBodyPhone.textContent = data.telefono;
-                    modalBodyPassword.textContent = data.contrasena;
                     modalBodyRole.textContent = data.rol;
                 })
                 .catch(error => console.error('Error:', error));
         });
-
-        function fetchResults(searchTerm, filterBy) {
-            fetch(`fetch_results.php?search=${searchTerm}&filter=${filterBy}`)
-                .then(response => response.text())
-                .then(html => {
-                    document.getElementById('results').innerHTML = html;
-                })
-                .catch(error => console.error('Error:', error));
-        }
     </script>
 </body>
 </html>

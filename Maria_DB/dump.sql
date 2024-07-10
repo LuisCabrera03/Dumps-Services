@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-07-2024 a las 22:43:09
+-- Tiempo de generación: 10-07-2024 a las 17:24:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -50,22 +50,6 @@ CREATE TABLE `mensajes` (
   `fecha_envio` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `mensajes`
---
-
-INSERT INTO `mensajes` (`id`, `id_solicitud`, `id_usuario`, `mensaje`, `fecha_envio`) VALUES
-(2, 6, 2, 'hola amigo ', '2024-05-19 17:50:04'),
-(7, 10, 8, 'hola\r\n', '2024-05-23 15:59:06'),
-(8, 10, 8, 'holaaaa', '2024-05-23 15:59:26'),
-(11, 11, 8, 'que se dice mami\r\n', '2024-05-23 19:18:09'),
-(13, 11, 8, 'vamos a ver nopor', '2024-05-23 19:18:51'),
-(15, 11, 8, 'méteme el pito', '2024-05-23 19:19:52'),
-(16, 12, 8, 'hey', '2024-06-12 17:54:35'),
-(18, 12, 8, 'como va la familiaaaa\r\n', '2024-06-12 17:56:07'),
-(19, 0, 8, 'h\r\n', '2024-06-12 18:10:19'),
-(20, 0, 8, 'h\r\n', '2024-06-12 18:10:27');
-
 -- --------------------------------------------------------
 
 --
@@ -97,15 +81,6 @@ CREATE TABLE `operarios` (
   `calificacion` int(11) DEFAULT NULL,
   `otros_detalles` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `operarios`
---
-
-INSERT INTO `operarios` (`id_operario`, `id_usuario`, `marca_motocarro`, `modelo_motocarro`, `año_motocarro`, `placa_motocarro`, `foto_motocarro`, `foto_2`, `foto_3`, `foto_4`, `foto_5`, `foto_6`, `foto_7`, `foto_8`, `foto_9`, `foto_10`, `direccion_domicilio`, `certificado_antecedentes_judiciales`, `certificado_seguridad_social`, `licencia_conduccion`, `seguro_vehiculo`, `calificacion`, `otros_detalles`) VALUES
-(5, 11, 'Honda', '2011', 1924, 'eag09c', 'media/fotos/api.png', 'media/fotos/app_py.png', 'media/fotos/app2.png', 'media/fotos/apinit.png', 'media/fotos/apinit.png', 'media/fotos/app2.png', NULL, NULL, NULL, NULL, 'calle 4b sur #5-11', 'media/certificados/antecedentes/app2.png', 'media/certificados/seguridad/model.png', 'media/certificados/licencia/apinit.png', 'media/certificados/seguro/app2.png', NULL, 'me gustas tu namas'),
-(6, 11, 'Honda', '2011', 1924, 'eag09c', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'calle 4b sur #5-11', NULL, NULL, NULL, NULL, NULL, NULL),
-(7, 12, 'Yamaha', '2011', 2011, 'eag09c', 'media/fotos/Captura de pantalla 2024-05-14 155529.png', 'media/fotos/Captura de pantalla 2024-06-17 180529.png', 'media/fotos/Captura de pantalla_24-6-2024_17121_senasofiaplus.edu.co.jpeg', 'media/fotos/Captura de pantalla_24-6-2024_171513_senasofiaplus.edu.co.jpeg', 'media/fotos/Captura de pantalla 2024-07-03 153155.png', 'media/fotos/Captura de pantalla 2024-05-20 143620.png', 'media/fotos/Captura de pantalla 2024-05-21 145423.png', 'media/fotos/Captura de pantalla 2024-05-21 145618.png', 'media/fotos/Captura de pantalla 2024-05-14 155529.png', 'media/fotos/Captura de pantalla 2024-05-17 165500.png', 'calle 4b sur #5-11', 'media/certificados/antecedentes/Captura de pantalla 2024-06-17 180131.png', 'media/certificados/seguridad/Captura de pantalla 2024-06-17 180131.png', 'media/certificados/licencia/Captura de pantalla 20', 'media/certificados/seguro/Captura de pantalla 2024-06-17 180432.png', NULL, 'ffsdfsfd');
 
 -- --------------------------------------------------------
 
@@ -182,12 +157,7 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `fecha_nacimiento`, `tipo_documento`, `numero_documento`, `correo`, `rol`, `contrasena`, `telefono`) VALUES
-(2, 'Luis Alfredo c', 'Cabrera', '2024-04-29', 'cc', '10258748', 'cabrerasarrialu3is@gmail.com', 'administrador', '123456789', '3166004016'),
-(4, 'Paul Fernando', 'Marciano', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789', '3133855958'),
-(8, 'Alfredo', 'Cabrera', '2024-05-14', 'cc', '10258748', 'admin2@example.com', 'solicitante_transporte', '1234', '3186004016'),
-(11, 'Alfredo', 'caca', '2024-05-28', 'cc', '1004250794', 'alfred@example.com', 'operador_logistico', '1234', '3165221245'),
-(12, 'Paul Fernando', 'Cueto', '2024-06-02', 'cc', '10258748', 'cabrerasarrialuis@gmail.com', 'operador_logistico', '123456', '3162004516'),
-(13, 'Paul Fernando', 'Cueto', '2024-06-30', 'cc', '4920288', 'cabreracerquera@hotmail.com', 'operador_logistico', '123456789', '3162004516');
+(4, 'Don Fernando', 'Marciano', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789', '3133855958');
 
 --
 -- Índices para tablas volcadas
@@ -254,7 +224,7 @@ ALTER TABLE `mensajes`
 -- AUTO_INCREMENT de la tabla `operarios`
 --
 ALTER TABLE `operarios`
-  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `restablecer_password`
