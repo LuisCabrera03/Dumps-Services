@@ -73,7 +73,7 @@
                 <img src="https://www.revistaautocrash.com/wp-content/uploads/2022/09/Karguero-6-1024x683.jpg" alt="Imagen 2" class="img-fluid-dump img-hover-dump custom-img-dump">
             </div>
             <div class="col-md-4-dump">
-                <img src="https://mas.autecomobility.com/wp-content/uploads/2022/11/motocarro-auteco-829x550.jpg" alt="Imagen 3" class="img-fluid-dump img-hover-dump custom-img-dump">
+                <img src="https://acnews.blob.core.windows.net/imgnews/paragraph/NPAZ_0816fe5c076d43cfae969e338bf2d7e8.jpg" alt="Imagen 3" class="img-fluid-dump img-hover-dump custom-img-dump">
             </div>
         </div>
     </div>
