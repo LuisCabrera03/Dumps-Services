@@ -24,6 +24,7 @@
                 <ul>
                     <li><a href="#">Inicio</a></li>
                     <li><a href="#">Servicios</a></li>
+                    <li><a href="#">Condiciones de Uso</a></li>
                 </ul>
             </div>
             <div>
