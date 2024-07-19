@@ -114,7 +114,7 @@
 <body>
     <header class="main-header">
         <div class="logo">
-            <a href="index.php"><h1>Dump Services</h1>
+            <a href="index.php  "><h1>Dump Services</h1>
             </a>
         </div>
         <div class="auth-buttons">

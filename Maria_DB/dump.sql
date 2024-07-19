@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-07-2024 a las 17:24:55
+-- Tiempo de generación: 19-07-2024 a las 19:11:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -82,6 +82,14 @@ CREATE TABLE `operarios` (
   `otros_detalles` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `operarios`
+--
+
+INSERT INTO `operarios` (`id_operario`, `id_usuario`, `marca_motocarro`, `modelo_motocarro`, `año_motocarro`, `placa_motocarro`, `foto_motocarro`, `foto_2`, `foto_3`, `foto_4`, `foto_5`, `foto_6`, `foto_7`, `foto_8`, `foto_9`, `foto_10`, `direccion_domicilio`, `certificado_antecedentes_judiciales`, `certificado_seguridad_social`, `licencia_conduccion`, `seguro_vehiculo`, `calificacion`, `otros_detalles`) VALUES
+(13, 14, 'Yamaha', '2011', 2011, 'eag09c', 'media/fotos/RO42hZ9.png', 'media/fotos/10c.jpg', 'media/fotos/10c 10.jpg', 'media/fotos/pixelcut-export-19-1264x734.jpg', 'media/fotos/IMG-20191103-WA0033.jpg', 'media/fotos/1717524693.png', 'media/fotos/10c  6.jpg', 'media/fotos/10c 2.jpg', 'media/fotos/10c  7.jpg', 'media/fotos/10c  6.jpg', 'calle 4b sur #5-11', 'media/certificados/antecedentes/10c  6.jpg', 'media/certificados/seguridad/10c  7.jpg', 'media/certificados/licencia/10c  15.jpg', 'media/certificados/seguro/10c 8.jpg', NULL, 'fgbhjnk'),
+(14, 15, 'pepe', '2011', 2011, 'e', 'media/fotos/10c  7.jpg', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'calle 2', 'media/certificados/antecedentes/10c  15.jpg', 'media/certificados/seguridad/10c  7.jpg', 'media/certificados/licencia/10c  7.jpg', 'media/certificados/seguro/10c  6.jpg', NULL, 'eerere');
+
 -- --------------------------------------------------------
 
 --
@@ -149,15 +157,19 @@ CREATE TABLE `usuarios` (
   `correo` varchar(100) NOT NULL,
   `rol` enum('administrador','operador_logistico','solicitante_transporte') NOT NULL,
   `contrasena` varchar(255) NOT NULL,
-  `telefono` varchar(20) DEFAULT NULL
+  `telefono` varchar(20) DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `fecha_nacimiento`, `tipo_documento`, `numero_documento`, `correo`, `rol`, `contrasena`, `telefono`) VALUES
-(4, 'Don Fernando', 'Marciano', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789', '3133855958');
+INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `fecha_nacimiento`, `tipo_documento`, `numero_documento`, `correo`, `rol`, `contrasena`, `telefono`, `avatar`) VALUES
+(4, 'Don Fernando', 'Marciano', '1990-01-01', 'cc', '123456789', 'admin@example.com', 'administrador', '123456789', '3133855958', NULL),
+(14, 'Carlos Eduardo', 'cabrerasarrialuis@gmail.com', '2024-07-07', 'cc', '10258748', 'cabrerasarrialuis@gmail.com', 'operador_logistico', '123654', '3186004016', NULL),
+(15, 'Paul Fernando', 'Cueto Chambo', '2024-07-31', 'ce', '123456789', 'cabreraarrialuis@gmail.com', 'operador_logistico', '654', '3186004016', NULL),
+(16, 'Paul Fernando', 'cabrera', '2024-06-30', 'cc', '10258748', 'adcccmin@example.com', 'operador_logistico', '123456', '3162004516', NULL);
 
 --
 -- Índices para tablas volcadas
@@ -224,13 +236,13 @@ ALTER TABLE `mensajes`
 -- AUTO_INCREMENT de la tabla `operarios`
 --
 ALTER TABLE `operarios`
-  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_operario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `restablecer_password`
 --
 ALTER TABLE `restablecer_password`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `solicitudes`
@@ -242,7 +254,7 @@ ALTER TABLE `solicitudes`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- Restricciones para tablas volcadas
