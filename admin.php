@@ -1,45 +1,53 @@
 <?php
+session_start();
 include 'conexion.php';
 
-// Consultas SQL
-$sql = "SELECT usuarios.nombre, COUNT(mensajes.id) AS num_mensajes 
-        FROM usuarios 
-        LEFT JOIN mensajes ON usuarios.id = mensajes.id_usuario 
-        GROUP BY usuarios.id";
-$result = $conn->query($sql);
+// Verificar si el usuario ha iniciado sesión
+if (!isset($_SESSION['usuario_id'])) {
+    header("Location: login.php");
+    exit();
+}
 
-$sql2 = "SELECT operarios.id_operario, COUNT(solicitudes.id) AS num_solicitudes 
-         FROM operarios 
-         LEFT JOIN solicitudes ON operarios.id_operario = solicitudes.id_operario 
-         GROUP BY operarios.id_operario";
-$result2 = $conn->query($sql2);
+// Consultas SQL para gráficos
+$sqlMensajes = "SELECT usuarios.nombre, COUNT(mensajes.id) AS num_mensajes 
+                FROM usuarios 
+                LEFT JOIN mensajes ON usuarios.id = mensajes.id_usuario 
+                GROUP BY usuarios.id";
+$resultMensajes = $conn->query($sqlMensajes);
 
-$sql3 = "SELECT DATE(fecha_envio) AS fecha, COUNT(id) AS num_mensajes 
-         FROM mensajes 
-         GROUP BY DATE(fecha_envio)";
-$result3 = $conn->query($sql3);
+$sqlSolicitudes = "SELECT operarios.id_operario, COUNT(solicitudes.id) AS num_solicitudes 
+                   FROM operarios 
+                   LEFT JOIN solicitudes ON operarios.id_operario = solicitudes.id_operario 
+                   GROUP BY operarios.id_operario";
+$resultSolicitudes = $conn->query($sqlSolicitudes);
 
-$sql4 = "SELECT estado, COUNT(id) AS num_solicitudes 
-         FROM solicitudes 
-         GROUP BY estado";
-$result4 = $conn->query($sql4);
+$sqlMensajesPorFecha = "SELECT DATE(fecha_envio) AS fecha, COUNT(id) AS num_mensajes 
+                        FROM mensajes 
+                        GROUP BY DATE(fecha_envio)";
+$resultMensajesPorFecha = $conn->query($sqlMensajesPorFecha);
 
-$sql5 = "SELECT usuarios.nombre, COUNT(mensajes.id) AS num_mensajes 
-         FROM usuarios 
-         LEFT JOIN mensajes ON usuarios.id = mensajes.id_usuario 
-         WHERE mensajes.fecha_envio >= DATE_SUB(NOW(), INTERVAL 7 DAY) 
-         GROUP BY usuarios.id";
-$result5 = $conn->query($sql5);
+$sqlEstadosSolicitudes = "SELECT estado, COUNT(id) AS num_solicitudes 
+                          FROM solicitudes 
+                          GROUP BY estado";
+$resultEstadosSolicitudes = $conn->query($sqlEstadosSolicitudes);
 
-$sql6 = "SELECT operarios.id_operario, AVG(calificacion) AS calificacion_promedio 
-         FROM operarios 
-         GROUP BY operarios.id_operario";
-$result6 = $conn->query($sql6);
+$sqlUsuariosPorRol = "SELECT rol, COUNT(id) AS num_usuarios 
+                      FROM usuarios 
+                      GROUP BY rol";
+$resultUsuariosPorRol = $conn->query($sqlUsuariosPorRol);
 
-$sql7 = "SELECT rol, COUNT(id) AS num_usuarios 
-         FROM usuarios 
-         GROUP BY rol";
-$result7 = $conn->query($sql7);
+// Obtener saludo basado en la hora
+date_default_timezone_set('America/Bogota');
+$hora = date('H');
+$saludo = '';
+
+if ($hora >= 6 && $hora < 12) {
+    $saludo = '¡Buenos días!';
+} elseif ($hora >= 12 && $hora < 18) {
+    $saludo = '¡Buenas tardes!';
+} else {
+    $saludo = '¡Buenas noches!';
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -48,195 +56,202 @@ $result7 = $conn->query($sql7);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Control</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
         }
 
-        .navbar-custom {
-            background-color: #343a40;
-        }
-
-        .navbar-custom .navbar-brand,
-        .navbar-custom .nav-link {
-            color: #ffffff;
-        }
-
-        .container {
-            margin-top: 30px;
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            transition: transform 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-title {
-            color: #495057;
-        }
-
-        .chart-container {
+        .sidebar {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            min-height: 100vh;
             padding: 20px;
         }
 
-        .table-container {
-            margin-top: 20px;
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: block;
+            padding: 10px 0;
         }
 
-        .btn-custom {
-            background-color: #17a2b8;
+        .sidebar a:hover {
+            background-color: #34495e;
+            border-radius: 5px;
+        }
+
+        .sidebar .active {
+            background-color: #34495e;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+            margin-bottom: 20px;
             color: white;
+            padding: 20px;
         }
 
-        .btn-custom:hover {
-            background-color: #138496;
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
         }
 
-        .navbar-nav .nav-item:not(:last-child) {
-            margin-right: 15px;
+        .card-orange {
+            background: linear-gradient(60deg, #ffa726, #fb8c00);
+            box-shadow: 0 4px 20px 0 rgba(255, 152, 0, 0.14), 0 7px 10px -5px rgba(255, 152, 0, 0.4);
         }
 
-        .navbar-nav .nav-link {
-            font-size: 1.1rem;
-            padding: 10px 15px;
+        .card-green {
+            background: linear-gradient(60deg, #66bb6a, #43a047);
+            box-shadow: 0 4px 20px 0 rgba(76, 175, 80, 0.14), 0 7px 10px -5px rgba(76, 175, 80, 0.4);
+        }
+
+        .card-red {
+            background: linear-gradient(60deg, #ef5350, #e53935);
+            box-shadow: 0 4px 20px 0 rgba(244, 67, 54, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+        }
+
+        .card-blue {
+            background: linear-gradient(60deg, #42a5f5, #1e88e5);
+            box-shadow: 0 4px 20px 0 rgba(33, 150, 243, 0.14), 0 7px 10px -5px rgba(33, 150, 243, 0.4);
+        }
+
+        .card-content {
+            font-size: 1.5rem;
+        }
+
+        .card-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .card-footer {
+            text-align: right;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 200px;
         }
     </style>
 </head>
 
 <body>
-    <!-- Barra de navegación -->
-    <nav class="navbar navbar-expand-lg navbar-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Panel de Control</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="admin_usuarios.php">Gestión de usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="perfil.php">Perfil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="logout.php">Cerrar sesión</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
 
-    <div class="container">
-        <h2 class="text-center text-custom mb-4">Panel de Control</h2>
-
-        <div class="row row-cols-1 row-cols-md-2 g-4">
-            <div class="col">
-                <div class="chart-container card">
-                    <div class="card-body">
-                        <h5 class="card-title">Número de mensajes por usuario</h5>
-                        <canvas id="mensajesChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="chart-container card">
-                    <div class="card-body">
-                        <h5 class="card-title">Número de solicitudes por operario</h5>
-                        <canvas id="solicitudesChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="chart-container card">
-                    <div class="card-body">
-                        <h5 class="card-title">Número de mensajes por fecha</h5>
-                        <canvas id="mensajesPorFechaChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="chart-container card">
-                    <div class="card-body">
-                        <h5 class="card-title">Distribución de estados de las solicitudes</h5>
-                        <canvas id="estadosSolicitudesChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="chart-container card">
-                    <div class="card-body">
-                        <h5 class="card-title">Distribución de usuarios por rol</h5>
-                        <canvas id="usuariosPorRolChart"></canvas>
-                    </div>
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <div class="d-flex">
+        <div class="sidebar p-3">
+            <h3>Dashboard</h3>
+            <a href="dashboard.php" class="active">Panel de Control</a>
+            <a href="admin_usuarios.php">Gestión de Usuarios</a>
+            <a href="perfil.php">Perfil</a>
+            <a href="logout.php">Cerrar Sesión</a>
         </div>
 
-        <div class="table-container card mt-4">
-            <div class="card-body">
-                <h5 class="card-title">Usuarios activos (última semana)</h5>
-                <table class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Número de Mensajes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row5 = $result5->fetch_assoc()) : ?>
-                            <tr>
-                                <td><?php echo $row5["nombre"]; ?></td>
-                                <td><?php echo $row5["num_mensajes"]; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
+        <!-- Main content -->
+        <div class="flex-grow-1">
+            <div class="main-content">
+                <h4><?php echo $saludo; ?></h4>
+                <p>Aquí está lo que está pasando con tu negocio hoy.</p>
+
+                <div class="row">
+                    <!-- Card 1 -->
+                    <div class="col-md-4">
+                        <div class="card card-orange">
+                            <i class="fas fa-envelope card-icon"></i>
+                            <div class="card-content">
+                                <?php
+                                $totalMensajes = 0;
+                                while ($row = $resultMensajes->fetch_assoc()) {
+                                    $totalMensajes += $row['num_mensajes'];
+                                }
+                                echo $totalMensajes;
+                                ?>
+                            </div>
+                            <div class="card-subtitle">Total Mensajes</div>
+                            <div class="card-footer">Actualización reciente</div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="col-md-4">
+                        <div class="card card-green">
+                            <i class="fas fa-tasks card-icon"></i>
+                            <div class="card-content">
+                                <?php
+                                $totalSolicitudes = 0;
+                                while ($row = $resultSolicitudes->fetch_assoc()) {
+                                    $totalSolicitudes += $row['num_solicitudes'];
+                                }
+                                echo $totalSolicitudes;
+                                ?>
+                            </div>
+                            <div class="card-subtitle">Total Solicitudes</div>
+                            <div class="card-footer">Actualización reciente</div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="col-md-4">
+                        <div class="card card-red">
+                            <i class="fas fa-user-friends card-icon"></i>
+                            <div class="card-content">
+                                <?php
+                                $totalUsuarios = 0;
+                                while ($row = $resultUsuariosPorRol->fetch_assoc()) {
+                                    $totalUsuarios += $row['num_usuarios'];
+                                }
+                                echo $totalUsuarios;
+                                ?>
+                            </div>
+                            <div class="card-subtitle">Total Usuarios</div>
+                            <div class="card-footer">Actualización reciente</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <!-- Gráfico de líneas -->
+                    <div class="col-md-8">
+                        <div class="card card-blue">
+                            <h5>Tráfico de Mensajes</h5>
+                            <div class="chart-container">
+                                <canvas id="mensajesPorFechaChart"></canvas>
+                            </div>
+                            <div class="card-footer">Últimos 7 días</div>
+                        </div>
+                    </div>
+                    <!-- Gráfico de doughnut -->
+                    <div class="col-md-4">
+                        <div class="card card-green">
+                            <h5>Distribución de Estados</h5>
+                            <div class="chart-container">
+                                <canvas id="estadosSolicitudesChart"></canvas>
+                            </div>
+                            <div class="card-footer">Estados de Solicitudes</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <div class="table-container card mt-4 mb-5">
-            <div class="card-body">
-                <h5 class="card-title">Operarios con calificación promedio</h5>
-                <table class="table table-striped table-bordered">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Operario</th>
-                            <th>Calificación Promedio</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($row6 = $result6->fetch_assoc()) : ?>
-                            <tr>
-                                <td><?php echo $row6["id_operario"]; ?></td>
-                                <td><?php echo $row6["calificacion_promedio"]; ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <button class="btn btn-custom my-3" onclick="window.location.href='reporte.php'">Descargar Reporte</button>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+        // Función para crear gráficos
         const createChart = (ctx, type, labels, data, label, backgroundColor, borderColor) => {
             return new Chart(ctx, {
                 type: type,
-                plugins: [ChartDataLabels],
                 data: {
                     labels: labels,
                     datasets: [{
@@ -249,22 +264,6 @@ $result7 = $conn->query($sql7);
                 },
                 options: {
                     responsive: true,
-                    plugins: {
-                        datalabels: {
-                            color: 'white',
-                            display: function(context) {
-                                return context.dataset.data[context.dataIndex] > 0;
-                            },
-                            font: {
-                                weight: 'bold'
-                            },
-                            formatter: Math.round
-                        }
-                    },
-                    animation: {
-                        duration: 2000,
-                        easing: 'easeInOutBounce'
-                    },
                     scales: {
                         y: {
                             beginAtZero: true
@@ -275,7 +274,7 @@ $result7 = $conn->query($sql7);
         };
 
         <?php
-        // Datos para los gráficos
+        // Preparar datos para gráficos
         function prepararDatos($resultado, $labelCampo, $dataCampo)
         {
             $labels = [];
@@ -287,48 +286,27 @@ $result7 = $conn->query($sql7);
             return [implode(',', $labels), implode(',', $data)];
         }
 
-        list($labels1, $data1) = prepararDatos($result, 'nombre', 'num_mensajes');
-        list($labels2, $data2) = prepararDatos($result2, 'id_operario', 'num_solicitudes');
-        list($labels3, $data3) = prepararDatos($result3, 'fecha', 'num_mensajes');
-        list($labels4, $data4) = prepararDatos($result4, 'estado', 'num_solicitudes');
-        list($labels5, $data5) = prepararDatos($result7, 'rol', 'num_usuarios');
+        list($labelsMensajesPorFecha, $dataMensajesPorFecha) = prepararDatos($resultMensajesPorFecha, 'fecha', 'num_mensajes');
+        list($labelsEstadosSolicitudes, $dataEstadosSolicitudes) = prepararDatos($resultEstadosSolicitudes, 'estado', 'num_solicitudes');
         ?>
 
+        // Gráfico: Tráfico de Mensajes
         createChart(
-            document.getElementById('mensajesChart').getContext('2d'),
-            'bar',
-            [<?php echo $labels1; ?>],
-            [<?php echo $data1; ?>],
+            document.getElementById('mensajesPorFechaChart').getContext('2d'),
+            'line',
+            [<?php echo $labelsMensajesPorFecha; ?>],
+            [<?php echo $dataMensajesPorFecha; ?>],
             'Número de Mensajes',
             'rgba(54, 162, 235, 0.2)',
             'rgba(54, 162, 235, 1)'
         );
 
-        createChart(
-            document.getElementById('solicitudesChart').getContext('2d'),
-            'bar',
-            [<?php echo $labels2; ?>],
-            [<?php echo $data2; ?>],
-            'Número de Solicitudes',
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 99, 132, 1)'
-        );
-
-        createChart(
-            document.getElementById('mensajesPorFechaChart').getContext('2d'),
-            'line',
-            [<?php echo $labels3; ?>],
-            [<?php echo $data3; ?>],
-            'Número de Mensajes',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(75, 192, 192, 1)'
-        );
-
+        // Gráfico: Distribución de Estados de Solicitudes
         createChart(
             document.getElementById('estadosSolicitudesChart').getContext('2d'),
-            'pie',
-            [<?php echo $labels4; ?>],
-            [<?php echo $data4; ?>],
+            'doughnut',
+            [<?php echo $labelsEstadosSolicitudes; ?>],
+            [<?php echo $dataEstadosSolicitudes; ?>],
             'Distribución de Estados de las Solicitudes',
             [
                 'rgba(255, 99, 132, 0.2)',
@@ -347,19 +325,7 @@ $result7 = $conn->query($sql7);
                 'rgba(255, 159, 64, 1)'
             ]
         );
-
-        createChart(
-            document.getElementById('usuariosPorRolChart').getContext('2d'),
-            'bar',
-            [<?php echo $labels5; ?>],
-            [<?php echo $data5; ?>],
-            'Número de Usuarios',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(255, 206, 86, 1)'
-        );
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 
 </html>
