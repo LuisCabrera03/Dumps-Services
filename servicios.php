@@ -405,7 +405,7 @@ include 'header.php';
                     <h4>Teléfono</h4>
                     <p>(+123) 456-7890</p>
                     <h4>Email</h4>
-                    <p>contacto@dumpservices.com</p>
+                    <p>soportedumpservices@gmail.com</p>
                 </div>
             </div>
         </div>
